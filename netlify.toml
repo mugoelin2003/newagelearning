@@ -1,0 +1,39 @@
+# netlify.toml — active config for the whole site.
+# Only the "public" folder is served to visitors; backend source stays private.
+
+[build]
+  publish = "public"
+
+# Backend-as-a-function (Option A). Harmless if you don't set up the backend yet,
+# because the front ends run in mock mode until you switch them over.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  external_node_modules = ["express", "pg", "bcryptjs", "jsonwebtoken", "multer", "serverless-http", "cors"]
+
+# ---- pretty URLs ----
+[[redirects]]
+  from = "/learner"
+  to   = "/learner.html"
+  status = 200
+[[redirects]]
+  from = "/educator"
+  to   = "/educator.html"
+  status = 200
+[[redirects]]
+  from = "/institution"
+  to   = "/institution.html"
+  status = 200
+[[redirects]]
+  from = "/admin"
+  to   = "/admin.html"
+  status = 200
+
+# ---- API proxy (Option A only) ----
+# Sends /api/* to the Netlify Function. Delete this block if you host the
+# backend on Render/Railway instead and point the front ends at that URL.
+[[redirects]]
+  from = "/api/*"
+  to   = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true

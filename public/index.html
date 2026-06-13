@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Age Learning — Learning that helps young India lead</title>
+<meta name="description" content="New Age Learning is the new-age platform for India and the Indian diaspora. Read, listen and watch content on AI, smart money and the future of learning — for learners, educators and institutions.">
+<meta name="keywords" content="new age learning, AI for students India, smart money India, online learning India, educator platform, school learning content">
+<meta property="og:title" content="New Age Learning — Learning that helps young India lead">
+<meta property="og:description" content="A new-age learning platform for India and the Indian diaspora. Built for learners, educators and institutions.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://newagelearning.in/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"EducationalOrganization","name":"New Age Learning","url":"https://newagelearning.in/","description":"A new-age learning platform for India and the Indian diaspora, offering content on AI, smart money and the future of learning for learners, educators and institutions."}
+</script>
+<style>
+  :root{
+    --ink:#16142E;--ink-2:#2B2660;--violet:#4B3FBE;--violet-soft:#6E62E6;
+    --marigold:#FFA62B;--coral:#FF5C7A;--teal:#15B8A6;
+    --paper:#FBFAFF;--paper-2:#F1EEFB;--card:#FFFFFF;
+    --line:rgba(22,20,46,0.10);--muted:#5A557A;
+    --shadow:0 18px 50px -24px rgba(40,30,110,0.45);--shadow-sm:0 8px 24px -16px rgba(40,30,110,0.4);--r:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3,h4,.display{font-family:'Bricolage Grotesque',sans-serif;line-height:1.04;letter-spacing:-0.02em;font-weight:700}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--violet);font-weight:700}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;font-size:.72rem;font-weight:600;padding:4px 11px}
+
+  header{position:sticky;top:0;z-index:60;background:rgba(251,250,255,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.18rem;letter-spacing:-.02em}
+  .logo .mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--violet),var(--coral));display:grid;place-items:center;color:#fff;font-size:1.1rem;box-shadow:var(--shadow-sm)}
+  .navlinks{display:flex;align-items:center;gap:4px}
+  .navlinks button,.navlinks a.nl{font-family:'Inter',sans-serif;font-size:.92rem;font-weight:600;color:var(--ink);background:none;border:0;cursor:pointer;padding:9px 13px;border-radius:10px;transition:background .15s,color .15s}
+  .navlinks button:hover,.navlinks a.nl:hover{background:var(--paper-2);color:var(--violet)}
+  .navactions{display:flex;align-items:center;gap:10px}
+  .btn{font-family:'Inter',sans-serif;font-weight:600;font-size:.9rem;border-radius:11px;padding:10px 17px;cursor:pointer;border:1px solid transparent;transition:transform .12s,box-shadow .15s,background .15s;white-space:nowrap}
+  .btn:active{transform:translateY(1px)}
+  .btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+  .btn-ghost:hover{background:var(--paper-2)}
+  .btn-solid{background:var(--violet);color:#fff;box-shadow:var(--shadow-sm)}
+  .btn-solid:hover{background:var(--ink-2)}
+  .hamburger{display:none;background:none;border:1px solid var(--line);border-radius:10px;width:42px;height:42px;cursor:pointer;font-size:1.2rem}
+
+  .hero{padding:54px 0 30px;position:relative}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+  .hero h1{font-size:clamp(2.3rem,5vw,3.7rem);font-weight:800}
+  .hero h1 em{font-style:normal;color:var(--violet)}
+  .hero p.lede{font-size:1.08rem;color:var(--muted);margin:20px 0 26px;max-width:33em}
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+  .btn-lg{padding:14px 24px;font-size:1rem;border-radius:13px}
+  .trust{display:flex;align-items:center;gap:14px;margin-top:26px;color:var(--muted);font-size:.86rem}
+  .dots{display:flex}
+  .dots span{width:30px;height:30px;border-radius:50%;border:2px solid var(--paper);margin-left:-8px;background:var(--paper-2)}
+  .dots span:nth-child(1){background:linear-gradient(135deg,var(--violet),var(--violet-soft))}
+  .dots span:nth-child(2){background:linear-gradient(135deg,var(--marigold),var(--coral))}
+  .dots span:nth-child(3){background:linear-gradient(135deg,var(--teal),var(--violet-soft))}
+  .dots span:nth-child(4){background:linear-gradient(135deg,var(--coral),var(--marigold))}
+
+  .mission{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);overflow:hidden}
+  .mission-tabs{display:grid;grid-template-columns:repeat(4,1fr)}
+  .mtab{font-family:'Inter';font-weight:600;font-size:.8rem;padding:13px 8px;background:var(--paper-2);border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);cursor:pointer;color:var(--muted);transition:background .15s,color .15s;display:flex;flex-direction:column;align-items:center;gap:6px}
+  .mtab:last-child{border-right:0}
+  .mtab .ic{font-size:1.15rem}
+  .mtab[aria-selected="true"]{background:var(--card);color:var(--violet);border-bottom-color:transparent}
+  .mpanel{padding:24px;display:none}
+  .mpanel.on{display:block;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .mpanel .visual{height:182px;border-radius:16px;margin-bottom:18px;display:grid;place-items:center;position:relative;overflow:hidden}
+  .mpanel .visual svg{width:100%;height:100%}
+  .mpanel h3{font-size:1.4rem;margin-bottom:8px}
+  .mpanel p{color:var(--muted);font-size:.96rem}
+  .v-lead{background:linear-gradient(135deg,var(--violet),var(--coral))}
+  .v-ai{background:linear-gradient(135deg,var(--ink-2),var(--teal))}
+  .v-fin{background:linear-gradient(135deg,var(--marigold),var(--coral))}
+  .v-future{background:linear-gradient(135deg,var(--teal),var(--violet))}
+
+  section.block{padding:64px 0}
+  .sec-head{max-width:42em;margin-bottom:30px}
+  .sec-head h2{font-size:clamp(1.8rem,3.6vw,2.6rem);margin:10px 0 12px}
+  .sec-head p{color:var(--muted);font-size:1.02rem}
+  .aud-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+  .aud-tab{font-family:'Inter';font-weight:600;font-size:.95rem;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 18px;cursor:pointer;color:var(--ink);transition:all .15s}
+  .aud-tab[aria-selected="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .aud-content{display:none}
+  .aud-content.on{display:block;animation:fade .35s ease}
+  .sub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .sub-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden}
+  .sub-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .sub-card .tag{font-family:'Space Mono';font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--violet);font-weight:700}
+  .sub-card h4{font-size:1.18rem;margin:8px 0 8px}
+  .sub-card p{color:var(--muted);font-size:.9rem;margin-bottom:14px}
+  .sub-card .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:.72rem;background:var(--paper-2);color:var(--ink-2);padding:4px 9px;border-radius:8px;font-weight:600}
+  .sub-card .corner{position:absolute;top:-30px;right:-30px;width:80px;height:80px;border-radius:50%;opacity:.18}
+
+  .lib{background:var(--ink);color:#fff;border-radius:28px;padding:44px 0;position:relative;overflow:hidden}
+  .lib .wrap{position:relative;z-index:2}
+  .lib .sec-head h2{color:#fff}
+  .lib .sec-head p{color:rgba(255,255,255,.7)}
+  .lib .eyebrow{color:var(--marigold)}
+  .lib-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px}
+  .book{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+  .book .cover{height:130px;display:grid;place-items:center;font-size:2.4rem;position:relative}
+  .c1{background:linear-gradient(135deg,#6E62E6,#FF5C7A)}
+  .c2{background:linear-gradient(135deg,#FFA62B,#FF5C7A)}
+  .c3{background:linear-gradient(135deg,#15B8A6,#4B3FBE)}
+  .book .body{padding:16px;flex:1;display:flex;flex-direction:column;gap:8px}
+  .book h4{font-size:1.02rem;color:#fff}
+  .book .meta{font-size:.78rem;color:rgba(255,255,255,.6)}
+  .formats{display:flex;gap:6px;margin-top:auto}
+  .fmt{font-size:.68rem;font-weight:700;padding:4px 8px;border-radius:7px;background:rgba(255,255,255,.1);color:#fff;display:inline-flex;gap:4px;align-items:center}
+  .book .foot{display:flex;align-items:center;justify-content:flex-end;padding:12px 16px;border-top:1px solid rgba(255,255,255,.1)}
+  .book-actions{display:flex;gap:8px;align-items:center}
+  .heart{background:rgba(255,255,255,.12);border:0;width:34px;height:34px;border-radius:9px;cursor:pointer;color:#fff;font-size:1rem;transition:background .15s}
+  .heart:hover{background:rgba(255,255,255,.22)}
+  .heart.on{color:var(--coral);background:rgba(255,92,122,.18)}
+  .buy{background:var(--teal);color:#fff;font-weight:700;font-size:.8rem;border:0;border-radius:9px;padding:8px 13px;cursor:pointer}
+
+  .loginstrip{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px}
+  .lbene{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:16px}
+  .lbene .ic{font-size:1.3rem}
+  .lbene b{display:block;font-family:'Bricolage Grotesque';font-size:.98rem}
+  .lbene span{font-size:.82rem;color:rgba(255,255,255,.65)}
+
+  .cta{text-align:center;padding:70px 0}
+  .cta h2{font-size:clamp(2rem,4.5vw,3.1rem);font-weight:800;max-width:16em;margin:14px auto 16px}
+  .cta p{color:var(--muted);max-width:34em;margin:0 auto 26px}
+  .cta .hero-cta{justify-content:center}
+
+  footer{background:var(--paper-2);border-top:1px solid var(--line);padding:50px 0 28px}
+  .fgrid{display:grid;grid-template-columns:1.6fr repeat(4,1fr);gap:30px}
+  .fcol h5{font-family:'Bricolage Grotesque';font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;color:var(--ink)}
+  .fcol a{display:block;color:var(--muted);font-size:.88rem;padding:5px 0;transition:color .15s;cursor:pointer}
+  .fcol a:hover{color:var(--violet)}
+  .fbrand p{color:var(--muted);font-size:.9rem;margin:12px 0 0;max-width:26em}
+  .fbottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:36px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}
+  .admin-note{font-family:'Space Mono';font-size:.72rem;background:#fff;border:1px dashed var(--violet);color:var(--violet);padding:6px 12px;border-radius:999px}
+
+  .mobile-menu{display:none;flex-direction:column;gap:4px;padding:14px 22px 20px;border-bottom:1px solid var(--line);background:var(--paper)}
+  .mobile-menu a{padding:11px 12px;border-radius:10px;font-weight:600}
+  .mobile-menu a:hover{background:var(--paper-2)}
+  .mobile-menu .mrow{display:flex;gap:10px;margin-top:10px}
+  .mobile-menu .mrow .btn{flex:1;text-align:center}
+
+  /* modal */
+  .modal-bg{position:fixed;inset:0;background:rgba(22,20,46,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;backdrop-filter:blur(4px)}
+  .modal-bg.on{display:flex;animation:fade .2s ease}
+  .modal{background:#fff;border-radius:22px;padding:28px;width:100%;max-width:440px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow)}
+  .modal .mtitle{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.5rem;letter-spacing:-.02em}
+  .modal .msub{color:var(--muted);font-size:.88rem;margin:4px 0 20px}
+  .role-pick{display:flex;gap:8px;margin-bottom:14px}
+  .role-opt{flex:1;border:1px solid var(--line);border-radius:11px;padding:10px 6px;text-align:center;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .14s}
+  .role-opt.on{background:var(--violet);color:#fff;border-color:var(--violet)}
+  .fld{margin-bottom:13px}
+  .fld label{font-size:.78rem;font-weight:600;color:var(--ink-2);display:block;margin-bottom:6px}
+  .req{color:var(--coral)}
+  .fld input,.fld select{width:100%;font-family:inherit;font-size:.92rem;border:1px solid var(--line);border-radius:11px;padding:11px 13px;outline:none;background:#fff;color:var(--ink)}
+  .fld input:focus,.fld select:focus{border-color:var(--violet-soft)}
+  .modal .btn-solid{width:100%;margin-top:6px;justify-content:center;padding:13px}
+  .modal-alt{text-align:center;font-size:.85rem;color:var(--muted);margin-top:16px}
+  .modal-alt a{color:var(--violet);font-weight:600;cursor:pointer}
+  .mclose{float:right;background:var(--paper-2);border:0;width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:1rem;color:var(--muted)}
+
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--ink);color:#fff;padding:13px 22px;border-radius:13px;font-size:.88rem;font-weight:500;transition:transform .3s;z-index:200;box-shadow:var(--shadow);max-width:90vw;text-align:center}
+
+  @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:34px}.fgrid{grid-template-columns:1fr 1fr}.fbrand{grid-column:1/-1}}
+  @media(max-width:760px){.navlinks,.navactions .btn{display:none}.hamburger{display:grid;place-items:center}.navactions{gap:0}.sub-grid{grid-template-columns:1fr}.lib-grid{grid-template-columns:1fr}.loginstrip{grid-template-columns:1fr}.mission-tabs .mtab{font-size:.68rem;padding:11px 4px}.fgrid{grid-template-columns:1fr 1fr;gap:22px}}
+  @media(max-width:460px){.mtab span.lbl{display:none}.mtab{padding:14px 4px}.fgrid{grid-template-columns:1fr}.role-pick{flex-direction:column}}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0}
+  .share-opt{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-weight:600;font-size:.86rem;color:var(--ink);background:#fff;cursor:pointer;text-decoration:none}
+  .share-opt:hover{background:var(--paper-2)}
+  .share-opt .si{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.82rem;font-weight:700;flex-shrink:0}
+  .s-wa{background:#25D366}.s-x{background:#111}.s-fb{background:#1877F2}.s-tg{background:#29A9EB}.s-li{background:#0A66C2}.s-cp{background:var(--violet)}
+  .contact-hint{font-size:.76rem;color:var(--violet);background:var(--paper-2);padding:9px 12px;border-radius:9px;margin:2px 0 12px}
+  .fld textarea{width:100%;font-family:inherit;font-size:.92rem;border:1px solid var(--line);border-radius:11px;padding:11px 13px;outline:none;background:#fff;color:var(--ink);resize:vertical}
+  .fld textarea:focus{border-color:var(--violet-soft)}
+  .err{color:var(--coral);font-size:.78rem;margin-top:8px;display:none}
+  .err.show{display:block}
+  :focus-visible{outline:3px solid var(--violet-soft);outline-offset:2px;border-radius:6px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="logo" aria-label="New Age Learning home"><span class="mark">✦</span> New Age Learning</a>
+    <nav class="navlinks" aria-label="Primary">
+      <button data-aud="learner">Learner</button>
+      <button data-aud="educator">Educator</button>
+      <button data-aud="institution">School / Institution</button>
+      <a class="nl" href="#about">About us</a>
+    </nav>
+    <div class="navactions">
+      <button class="btn btn-ghost" data-auth="login">Log in</button>
+      <button class="btn btn-solid" data-auth="signup">Sign up</button>
+      <button class="hamburger" id="ham" aria-label="Open menu" aria-expanded="false">☰</button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#audiences" data-aud="learner">Learner</a>
+    <a href="#audiences" data-aud="educator">Educator</a>
+    <a href="#audiences" data-aud="institution">School / Institution</a>
+    <a href="#about">About us</a>
+    <div class="mrow">
+      <button class="btn btn-ghost" data-auth="login">Log in</button>
+      <button class="btn btn-solid" data-auth="signup">Sign up</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">For India &amp; the Indian diaspora</span>
+      <h1 style="margin-top:14px">Learning that helps <em>young India</em> lead the world.</h1>
+      <p class="lede">Read, listen and watch — across AI, smart money and the skills tomorrow asks for. Built for learners, the educators who guide them, and the institutions that bring them together.</p>
+      <div class="hero-cta">
+        <button class="btn btn-solid btn-lg" data-auth="signup">Start learning free</button>
+        <button class="btn btn-ghost btn-lg" data-scroll="library">Explore the library</button>
+      </div>
+      <div class="trust">
+        <span class="dots"><span></span><span></span><span></span><span></span></span>
+        <span>Read · listen · watch · share — your way</span>
+      </div>
+    </div>
+
+    <div class="mission" role="region" aria-label="Our mission">
+      <div class="mission-tabs" role="tablist">
+        <button class="mtab" role="tab" aria-selected="true" data-m="0"><span class="ic">🇮🇳</span><span class="lbl">Young India</span></button>
+        <button class="mtab" role="tab" aria-selected="false" data-m="1"><span class="ic">🤖</span><span class="lbl">AI</span></button>
+        <button class="mtab" role="tab" aria-selected="false" data-m="2"><span class="ic">💡</span><span class="lbl">Smart Money</span></button>
+        <button class="mtab" role="tab" aria-selected="false" data-m="3"><span class="ic">🚀</span><span class="lbl">Future</span></button>
+      </div>
+
+      <div class="mpanel on" data-mp="0">
+        <div class="visual v-lead">
+          <svg viewBox="0 0 400 182" xmlns="http://www.w3.org/2000/svg" aria-label="Young India leading">
+            <circle cx="200" cy="60" r="46" fill="#fff" opacity="0.16"/>
+            <g stroke="#fff" stroke-width="3" opacity="0.5">
+              <line x1="200" y1="2" x2="200" y2="20"/><line x1="260" y1="14" x2="252" y2="30"/><line x1="140" y1="14" x2="148" y2="30"/><line x1="290" y1="60" x2="272" y2="60"/><line x1="110" y1="60" x2="128" y2="60"/>
+            </g>
+            <rect x="150" y="120" width="100" height="42" rx="4" fill="#fff" opacity="0.9"/>
+            <rect x="100" y="138" width="50" height="24" rx="4" fill="#fff" opacity="0.6"/>
+            <rect x="250" y="132" width="50" height="30" rx="4" fill="#fff" opacity="0.7"/>
+            <circle cx="200" cy="100" r="14" fill="#fff"/><rect x="190" y="112" width="20" height="22" rx="6" fill="#fff"/>
+            <path d="M200 70 L208 86 L226 86 L212 96 L218 112 L200 102 L182 112 L188 96 L174 86 L192 86 Z" fill="var(--marigold)"/>
+          </svg>
+        </div>
+        <h3>Young India, leading India</h3>
+        <p>Our mission is to put new-age learning in the hands of every young Indian — at home and across the diaspora — so the next generation is ready to shape the country and the world.</p>
+      </div>
+
+      <div class="mpanel" data-mp="1">
+        <div class="visual v-ai">
+          <svg viewBox="0 0 400 182" xmlns="http://www.w3.org/2000/svg" aria-label="AI made approachable">
+            <path d="M150 50 Q150 30 175 30 L225 30 Q250 30 250 50 L250 110 Q250 130 225 130 L175 130 Q150 130 150 110 Z" fill="#fff" opacity="0.14"/>
+            <g fill="#fff"><circle cx="180" cy="62" r="7"/><circle cx="220" cy="62" r="7"/></g>
+            <rect x="185" y="92" width="30" height="6" rx="3" fill="#fff" opacity="0.8"/>
+            <line x1="200" y1="30" x2="200" y2="14" stroke="#fff" stroke-width="3"/><circle cx="200" cy="10" r="6" fill="var(--teal)"/>
+            <g stroke="#fff" stroke-width="2" opacity="0.55" fill="#fff">
+              <circle cx="110" cy="50" r="6"/><circle cx="95" cy="100" r="6"/><circle cx="300" cy="55" r="6"/><circle cx="312" cy="108" r="6"/>
+              <line x1="116" y1="54" x2="150" y2="70"/><line x1="100" y1="96" x2="150" y2="95"/><line x1="294" y1="60" x2="250" y2="72"/><line x1="306" y1="104" x2="250" y2="98"/>
+            </g>
+            <rect x="160" y="148" width="80" height="10" rx="5" fill="#fff" opacity="0.5"/>
+          </svg>
+        </div>
+        <h3>AI, made approachable</h3>
+        <p>From a curious 8-year-old to a working professional — learn what AI is, how to use it well, and how to build with it, in language that meets you where you are.</p>
+      </div>
+
+      <div class="mpanel" data-mp="2">
+        <div class="visual v-fin">
+          <svg viewBox="0 0 400 182" xmlns="http://www.w3.org/2000/svg" aria-label="Smart money">
+            <g><rect x="120" y="120" width="34" height="40" rx="4" fill="#fff" opacity="0.55"/><rect x="166" y="96" width="34" height="64" rx="4" fill="#fff" opacity="0.75"/><rect x="212" y="66" width="34" height="94" rx="4" fill="#fff" opacity="0.9"/></g>
+            <path d="M120 118 L175 92 L230 64 L270 44" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M256 40 L274 42 L270 60" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="300" cy="70" r="30" fill="#fff"/>
+            <text x="300" y="82" font-size="34" font-weight="800" text-anchor="middle" fill="var(--coral)" font-family="Bricolage Grotesque, sans-serif">₹</text>
+          </svg>
+        </div>
+        <h3>Smart money for life</h3>
+        <p>Money decisions shape every future. We teach saving, investing and smart money habits early — practical, India-first, and free of jargon.</p>
+      </div>
+
+      <div class="mpanel" data-mp="3">
+        <div class="visual v-future">
+          <svg viewBox="0 0 400 182" xmlns="http://www.w3.org/2000/svg" aria-label="The future of learning">
+            <path d="M40 150 Q200 40 360 150" stroke="#fff" stroke-width="3" fill="none" stroke-dasharray="7 9" opacity="0.6"/>
+            <g transform="translate(200 70) rotate(45)">
+              <path d="M0 -28 Q14 -14 14 6 L-14 6 Q-14 -14 0 -28 Z" fill="#fff"/>
+              <circle cx="0" cy="-8" r="6" fill="var(--violet)"/>
+              <path d="M-14 6 L-22 20 L-8 12 Z" fill="#fff" opacity="0.85"/>
+              <path d="M14 6 L22 20 L8 12 Z" fill="#fff" opacity="0.85"/>
+              <path d="M-6 8 L0 26 L6 8 Z" fill="var(--marigold)"/>
+            </g>
+            <g fill="#fff" opacity="0.85"><circle cx="70" cy="60" r="3"/><circle cx="330" cy="70" r="3"/><circle cx="300" cy="40" r="2"/><circle cx="110" cy="40" r="2"/></g>
+          </svg>
+        </div>
+        <h3>The future of learning</h3>
+        <p>Self-paced, multi-format and personalised. Pick up where you left off, save to a wishlist, and learn by reading, listening or watching — whatever suits the moment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="audiences">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Built for three worlds</span>
+      <h2>One platform, made for how you show up.</h2>
+      <p>Pick your world and we'll show what's inside — each one has its own tracks, content and tools.</p>
+    </div>
+    <div class="aud-tabs" role="tablist" id="audTabs">
+      <button class="aud-tab" role="tab" aria-selected="true" data-aud="learner">Learner</button>
+      <button class="aud-tab" role="tab" aria-selected="false" data-aud="educator">Educator</button>
+      <button class="aud-tab" role="tab" aria-selected="false" data-aud="institution">School / Institution</button>
+    </div>
+
+    <div class="aud-content on" data-ac="learner">
+      <div class="sub-grid">
+        <div class="sub-card"><span class="corner" style="background:var(--violet)"></span><span class="tag">Ages 5–12</span><h4>Young Explorer</h4><p>Learning that feels like play — animated stories, picture books and gentle first lessons in numbers, science and money.</p><div class="chips"><span class="chip">Read-alongs</span><span class="chip">Watch</span><span class="chip">Activities</span></div></div>
+        <div class="sub-card"><span class="corner" style="background:var(--marigold)"></span><span class="tag">Ages 13–22</span><h4>Students</h4><p>Curriculum-aligned depth plus AI and smart money that school doesn't teach — to study smarter and think bigger.</p><div class="chips"><span class="chip">Exam prep</span><span class="chip">Listen</span><span class="chip">Notes</span></div></div>
+        <div class="sub-card"><span class="corner" style="background:var(--teal)"></span><span class="tag">Working adults</span><h4>Professionals</h4><p>Stay ahead with practical AI, money and future-skill content you can finish in commutes and coffee breaks.</p><div class="chips"><span class="chip">Microlearning</span><span class="chip">Certificates</span><span class="chip">Watch</span></div></div>
+      </div>
+    </div>
+
+    <div class="aud-content" data-ac="educator">
+      <div class="sub-grid">
+        <div class="sub-card"><span class="corner" style="background:var(--violet)"></span><span class="tag">Independent</span><h4>Independent Educators</h4><p>Publish your lessons and reach learners across India and the diaspora — every submission is reviewed before going live.</p><div class="chips"><span class="chip">Publish</span><span class="chip">Reach</span><span class="chip">Analytics</span></div></div>
+        <div class="sub-card"><span class="corner" style="background:var(--coral)"></span><span class="tag">Authors &amp; creators</span><h4>Content Creators</h4><p>Turn books, audio and video into multi-format learning with built-in distribution to a growing audience.</p><div class="chips"><span class="chip">Books &amp; PDF</span><span class="chip">Audio</span><span class="chip">Video</span></div></div>
+        <div class="sub-card"><span class="corner" style="background:var(--marigold)"></span><span class="tag">Mentors</span><h4>Tutors</h4><p>Curate playlists, assign content and track how your learners progress over time.</p><div class="chips"><span class="chip">Curate</span><span class="chip">Assign</span><span class="chip">Track</span></div></div>
+      </div>
+    </div>
+
+    <div class="aud-content" data-ac="institution">
+      <div class="sub-grid">
+        <div class="sub-card"><span class="corner" style="background:var(--teal)"></span><span class="tag">K–12</span><h4>Schools</h4><p>Bring a vetted new-age library into classrooms with admin dashboards and bulk learner accounts.</p><div class="chips"><span class="chip">Dashboards</span><span class="chip">Bulk seats</span><span class="chip">Reports</span></div></div>
+        <div class="sub-card"><span class="corner" style="background:var(--violet)"></span><span class="tag">Test prep</span><h4>Coaching &amp; Institutes</h4><p>Supplement your programs with AI and smart-money modules your competitors don't offer.</p><div class="chips"><span class="chip">White-label</span><span class="chip">Cohorts</span><span class="chip">Modules</span></div></div>
+        <div class="sub-card"><span class="corner" style="background:var(--coral)"></span><span class="tag">Higher ed</span><h4>Universities</h4><p>Offer learners future-ready electives and certificates that complement formal degrees.</p><div class="chips"><span class="chip">Certificates</span><span class="chip">Electives</span><span class="chip">Integrations</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="library">
+  <div class="wrap">
+    <div class="lib">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="eyebrow">The library</span>
+          <h2>Read it. Hear it. Watch it. Share it.</h2>
+          <p>Every title comes in the formats that suit you. Save anything to your list when you're signed in, and pick up right where you left off.</p>
+        </div>
+        <div class="lib-grid">
+          <article class="book">
+            <div class="cover c1">📘</div>
+            <div class="body"><h4>AI for Curious Kids</h4><div class="meta">Ages 8–12</div><div class="formats"><span class="fmt">📖 Read</span><span class="fmt">🎧 Listen</span><span class="fmt">▶ Watch</span></div></div>
+            <div class="foot"><div class="book-actions"><button class="heart" aria-label="Save to wishlist">♡</button><button class="buy" data-read>Read now</button></div></div>
+          </article>
+          <article class="book">
+            <div class="cover c2">💡</div>
+            <div class="body"><h4>Smart Money for Teens</h4><div class="meta">Grades 8–12</div><div class="formats"><span class="fmt">📖 Read</span><span class="fmt">🎧 Listen</span></div></div>
+            <div class="foot"><div class="book-actions"><button class="heart" aria-label="Save to wishlist">♡</button><button class="buy" data-read>Read now</button></div></div>
+          </article>
+          <article class="book">
+            <div class="cover c3">🚀</div>
+            <div class="body"><h4>Future Skills Playbook</h4><div class="meta">Professional</div><div class="formats"><span class="fmt">📖 Read</span><span class="fmt">▶ Watch</span></div></div>
+            <div class="foot"><div class="book-actions"><button class="heart" aria-label="Save to wishlist">♡</button><button class="buy" data-read>Read now</button></div></div>
+          </article>
+        </div>
+        <div class="loginstrip">
+          <div class="lbene"><span class="ic">❤</span><div><b>Wishlist</b><span>Save books and content to come back to anytime.</span></div></div>
+          <div class="lbene"><span class="ic">🔖</span><div><b>Continue where you left off</b><span>Pick up from your last page or last minute watched.</span></div></div>
+          <div class="lbene"><span class="ic">🔔</span><div><b>Made for you</b><span>Signed-in learners get recommendations and updates.</span></div></div>
+        </div>
+        <p style="color:rgba(255,255,255,.55);font-size:.82rem;margin-top:18px">Browse freely without an account — sign in to make it yours.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="about">
+  <div class="wrap">
+    <span class="eyebrow">Why we exist</span>
+    <h2>Learning built for the new world — and for India's place in it.</h2>
+    <p>We're building new-age learning that's mobile-first, multi-format and made to grow with every learner, educator and institution.</p>
+    <div class="hero-cta">
+      <button class="btn btn-solid btn-lg" data-auth="signup">Create free account</button>
+      <button class="btn btn-ghost btn-lg" data-auth="signup-inst">For schools &amp; institutions</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fcol fbrand"><div class="logo"><span class="mark">✦</span> New Age Learning</div><p>A new-age learning platform where curiosity meets opportunity — for every mind, at every age, across India and the diaspora.</p></div>
+      <div class="fcol"><h5>Learners</h5><a data-aud="learner">Young Explorer</a><a data-aud="learner">Students</a><a data-aud="learner">Professionals</a><a data-scroll="library">The library</a></div>
+      <div class="fcol"><h5>Educators</h5><a data-aud="educator">Publish content</a><a data-aud="educator">Creator program</a><a data-aud="educator">Tutor tools</a></div>
+      <div class="fcol"><h5>Institutions</h5><a data-aud="institution">Schools</a><a data-aud="institution">Coaching</a><a data-aud="institution">Universities</a></div>
+      <div class="fcol"><h5>Company</h5><a href="#about">About us</a><a data-soon>Blog</a><a data-contact>Contact us</a><a data-share-site>Share</a></div>
+    </div>
+    <div class="fbottom"><span>© 2026 New Age Learning. All rights reserved.</span><span class="admin-note">Sections &amp; content managed via central admin</span></div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-bg" id="authModal">
+  <div class="modal">
+    <button class="mclose" id="authClose" aria-label="Close">✕</button>
+    <!-- LOGIN -->
+    <div id="loginView">
+      <div class="mtitle">Welcome back</div>
+      <div class="msub">Log in to your wishlist, progress and recommendations.</div>
+      <div class="fld"><label>Email or mobile <span class="req">*</span></label><input type="text" id="li_id" placeholder="you@example.com or 98xxxxxxxx"></div>
+      <div class="fld"><label>Password <span class="req">*</span></label><input type="password" id="li_pw" placeholder="••••••••"></div>
+      <button class="btn btn-solid" id="loginSubmit">Log in</button>
+      <div class="modal-alt">New here? <a data-switch="signup">Create an account</a></div>
+    </div>
+    <!-- SIGNUP -->
+    <div id="signupView" style="display:none">
+      <div class="mtitle">Create your account</div>
+      <div class="msub">Free to start. Tell us who you are so we can tailor your home.</div>
+      <div class="role-pick" id="rolePick">
+        <div class="role-opt on" data-role="learner">Learner</div>
+        <div class="role-opt" data-role="educator">Educator</div>
+        <div class="role-opt" data-role="institution">Institution</div>
+      </div>
+      <div class="fld"><label>Name <span class="req">*</span></label><input type="text" id="su_name" placeholder="Your full name"></div>
+      <div class="fld"><label>Mobile number <span class="req">*</span></label><input type="text" id="su_mob" placeholder="98xxxxxxxx"></div>
+      <div class="fld"><label>Email <span style="color:var(--muted);font-weight:400">(optional)</span></label><input type="text" id="su_email" placeholder="you@example.com"></div>
+      <div class="fld"><label>City</label><input type="text" id="su_city" placeholder="e.g. Bengaluru"></div>
+      <div class="fld" id="interestFld"><label>Interested in</label>
+        <select id="su_interest"><option value="">Select…</option><option>AI</option><option>Smart money</option><option>Exam prep</option><option>Future skills</option><option>Stories for kids</option></select>
+      </div>
+      <button class="btn btn-solid" id="signupSubmit">Create free account</button>
+      <div class="modal-alt">Already have an account? <a data-switch="login">Log in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal-bg" id="shareModal">
+  <div class="modal" style="max-width:380px">
+    <button class="mclose" id="shareClose" aria-label="Close">✕</button>
+    <div class="mtitle">Share</div>
+    <div class="msub" id="shareSub">Spread the word about New Age Learning.</div>
+    <div class="share-grid">
+      <a class="share-opt" id="sWa" target="_blank" rel="noopener"><span class="si s-wa">✆</span> WhatsApp</a>
+      <a class="share-opt" id="sX" target="_blank" rel="noopener"><span class="si s-x">𝕏</span> X</a>
+      <a class="share-opt" id="sFb" target="_blank" rel="noopener"><span class="si s-fb">f</span> Facebook</a>
+      <a class="share-opt" id="sTg" target="_blank" rel="noopener"><span class="si s-tg">➤</span> Telegram</a>
+      <a class="share-opt" id="sLi" target="_blank" rel="noopener"><span class="si s-li">in</span> LinkedIn</a>
+      <button class="share-opt" id="sCopy"><span class="si s-cp">🔗</span> Copy link</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT MODAL -->
+<div class="modal-bg" id="contactModal">
+  <div class="modal">
+    <button class="mclose" id="contactClose" aria-label="Close">✕</button>
+    <div class="mtitle">Contact us</div>
+    <div class="msub">Have a question or need help? Write to us and we'll respond.</div>
+    <div class="fld"><label>Your name <span style="color:var(--muted);font-weight:400">(optional)</span></label><input type="text" id="ct_name" placeholder="Your name"></div>
+    <div class="fld"><label>Mobile number</label><input type="text" id="ct_mobile" placeholder="98xxxxxxxx" inputmode="tel"></div>
+    <div class="fld"><label>Email</label><input type="text" id="ct_email" placeholder="you@example.com" inputmode="email"></div>
+    <div class="contact-hint">📩 Add at least a mobile number or an email so we can reply to you.</div>
+    <div class="fld"><label>Your message <span class="req">*</span></label><textarea id="ct_msg" rows="4" placeholder="Tell us your query or the help you need…"></textarea></div>
+    <div class="err" id="ctErr"></div>
+    <button class="btn btn-solid" id="ctSend" style="width:100%;margin-top:8px;justify-content:center">Send message</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  // Mission tabs
+  const mtabs=[...document.querySelectorAll('.mtab')],mpanels=[...document.querySelectorAll('.mpanel')];
+  mtabs.forEach(t=>t.addEventListener('click',()=>{mtabs.forEach(x=>x.setAttribute('aria-selected','false'));mpanels.forEach(p=>p.classList.remove('on'));t.setAttribute('aria-selected','true');mpanels[+t.dataset.m].classList.add('on');}));
+
+  // Audience tabs
+  const audTabs=[...document.querySelectorAll('.aud-tab')],audContent=[...document.querySelectorAll('.aud-content')];
+  function setAud(name){audTabs.forEach(t=>t.setAttribute('aria-selected',t.dataset.aud===name));audContent.forEach(c=>c.classList.toggle('on',c.dataset.ac===name));}
+  audTabs.forEach(t=>t.addEventListener('click',()=>setAud(t.dataset.aud)));
+  document.querySelectorAll('[data-aud]').forEach(el=>{if(el.classList.contains('aud-tab'))return;el.addEventListener('click',()=>{setAud(el.dataset.aud);document.getElementById('audiences').scrollIntoView({behavior:'smooth'});closeMenu();});});
+
+  // scroll links
+  document.querySelectorAll('[data-scroll]').forEach(el=>el.addEventListener('click',()=>document.getElementById(el.dataset.scroll).scrollIntoView({behavior:'smooth'})));
+
+  // wishlist
+  document.querySelectorAll('.heart').forEach(h=>h.addEventListener('click',()=>{const on=h.classList.toggle('on');h.textContent=on?'♥':'♡';toast(on?'Saved to your wishlist — log in to keep it':'Removed from wishlist');}));
+  document.querySelectorAll('[data-read]').forEach(b=>b.addEventListener('click',()=>toast('Opening reader… log in to save your progress')));
+
+  // "coming soon" catch-all so no link is dead
+  document.querySelectorAll('[data-soon]').forEach(a=>a.addEventListener('click',()=>toast('Coming soon')));
+
+  // mobile menu
+  const ham=document.getElementById('ham'),mm=document.getElementById('mobileMenu');
+  function closeMenu(){mm.style.display='none';ham.setAttribute('aria-expanded','false');}
+  ham.addEventListener('click',()=>{const open=mm.style.display==='flex';mm.style.display=open?'none':'flex';ham.setAttribute('aria-expanded',String(!open));});
+
+  // AUTH modal
+  const authModal=document.getElementById('authModal'),loginView=document.getElementById('loginView'),signupView=document.getElementById('signupView');
+  function openAuth(view){authModal.classList.add('on');showView(view);}
+  function showView(v){loginView.style.display=v==='login'?'block':'none';signupView.style.display=v==='login'?'none':'block';}
+  document.querySelectorAll('[data-auth]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.auth;if(v==='login')openAuth('login');else{openAuth('signup');if(v==='signup-inst')setRole('institution');}closeMenu();}));
+  document.getElementById('authClose').addEventListener('click',()=>authModal.classList.remove('on'));
+  authModal.addEventListener('click',e=>{if(e.target===authModal)authModal.classList.remove('on');});
+  document.querySelectorAll('[data-switch]').forEach(a=>a.addEventListener('click',()=>showView(a.dataset.switch)));
+
+  // role pick
+  let role='learner';
+  function setRole(r){role=r;document.querySelectorAll('.role-opt').forEach(o=>o.classList.toggle('on',o.dataset.role===r));}
+  document.querySelectorAll('.role-opt').forEach(o=>o.addEventListener('click',()=>setRole(o.dataset.role)));
+
+  // submit (demo validation)
+  document.getElementById('loginSubmit').addEventListener('click',()=>{
+    const id=document.getElementById('li_id').value.trim(),pw=document.getElementById('li_pw').value.trim();
+    if(!id||!pw){toast('Enter your email/mobile and password');return;}
+    authModal.classList.remove('on');toast('Logged in (demo) — welcome back!');
+  });
+  document.getElementById('signupSubmit').addEventListener('click',()=>{
+    const name=document.getElementById('su_name').value.trim(),mob=document.getElementById('su_mob').value.trim();
+    if(!name||!mob){toast('Name and mobile number are required');return;}
+    authModal.classList.remove('on');toast('Account created (demo) — welcome to New Age Learning!');
+  });
+
+  // toast
+  let tT;function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.transform='translateX(-50%) translateY(0)';clearTimeout(tT);tT=setTimeout(()=>t.style.transform='translateX(-50%) translateY(90px)',2600);}
+
+  // ---------- share (WhatsApp + social + copy, with native share) ----------
+  const shareModal=document.getElementById('shareModal');
+  let shareUrl=location.href, shareText='Learning that helps young India lead — on New Age Learning.';
+  function setShareLinks(){
+    const u=encodeURIComponent(shareUrl), t=encodeURIComponent(shareText);
+    document.getElementById('sWa').href='https://wa.me/?text='+t+'%20'+u;
+    document.getElementById('sX').href='https://twitter.com/intent/tweet?text='+t+'&url='+u;
+    document.getElementById('sFb').href='https://www.facebook.com/sharer/sharer.php?u='+u;
+    document.getElementById('sTg').href='https://t.me/share/url?url='+u+'&text='+t;
+    document.getElementById('sLi').href='https://www.linkedin.com/sharing/share-offsite/?url='+u;
+  }
+  async function doShare(title){
+    shareUrl=location.href;
+    shareText=title?('Check out "'+title+'" on New Age Learning'):'Learning that helps young India lead — on New Age Learning.';
+    document.getElementById('shareSub').textContent=title?('Share "'+title+'" with friends.'):'Spread the word about New Age Learning.';
+    if(navigator.share){try{await navigator.share({title:title||'New Age Learning',text:shareText,url:shareUrl});return;}catch(e){if(e&&e.name==='AbortError')return;}}
+    setShareLinks();shareModal.classList.add('on');
+  }
+  document.querySelectorAll('[data-share-site]').forEach(b=>b.addEventListener('click',()=>doShare()));
+  document.getElementById('shareClose').addEventListener('click',()=>shareModal.classList.remove('on'));
+  shareModal.addEventListener('click',e=>{if(e.target===shareModal)shareModal.classList.remove('on');});
+  document.getElementById('sCopy').addEventListener('click',()=>{(navigator.clipboard&&navigator.clipboard.writeText(shareUrl));toast('Link copied');shareModal.classList.remove('on');});
+  shareModal.querySelectorAll('a.share-opt').forEach(a=>a.addEventListener('click',()=>shareModal.classList.remove('on')));
+  document.querySelectorAll('.book').forEach(card=>{
+    const title=((card.querySelector('h4')||{}).textContent)||'';
+    const acts=card.querySelector('.book-actions');
+    if(acts){const b=document.createElement('button');b.className='heart';b.setAttribute('aria-label','Share');b.textContent='↗';b.onclick=()=>doShare(title);acts.insertBefore(b,acts.firstChild);}
+  });
+
+  // ---------- contact us (mandatory mobile OR email, validated) ----------
+  const contactModal=document.getElementById('contactModal');
+  document.querySelectorAll('[data-contact]').forEach(b=>b.addEventListener('click',()=>contactModal.classList.add('on')));
+  document.getElementById('contactClose').addEventListener('click',()=>contactModal.classList.remove('on'));
+  contactModal.addEventListener('click',e=>{if(e.target===contactModal)contactModal.classList.remove('on');});
+  const validEmail=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  const validMobile=v=>/^\+?\d[\d\s-]{7,14}$/.test(v);
+  document.getElementById('ctSend').addEventListener('click',()=>{
+    const name=document.getElementById('ct_name').value.trim();
+    const mobile=document.getElementById('ct_mobile').value.trim();
+    const email=document.getElementById('ct_email').value.trim();
+    const message=document.getElementById('ct_msg').value.trim();
+    const err=document.getElementById('ctErr');
+    const fail=m=>{err.textContent=m;err.classList.add('show');};
+    err.classList.remove('show');
+    if(!message){return fail('Please write your message.');}
+    if(!mobile&&!email){return fail('Add a mobile number or an email so we can reply.');}
+    if(mobile&&!validMobile(mobile)){return fail("That mobile number doesn't look right.");}
+    if(email&&!validEmail(email)){return fail("That email doesn't look right.");}
+    // when live:  NAL.contact.send({ name, mobile, email, message })
+    contactModal.classList.remove('on');toast("Thanks! We'll get back to you soon.");
+    ['ct_name','ct_mobile','ct_email','ct_msg'].forEach(id=>document.getElementById(id).value='');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Age Learning — My Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16142E;--ink-2:#2B2660;--violet:#4B3FBE;--violet-soft:#6E62E6;
+    --marigold:#FFA62B;--coral:#FF5C7A;--teal:#15B8A6;
+    --paper:#F7F6FC;--card:#FFFFFF;--line:#E8E5F2;--line-2:#F0EEF8;
+    --muted:#5A557A;--r:16px;--shadow:0 16px 44px -24px rgba(40,30,110,.42);--shadow-sm:0 8px 22px -16px rgba(40,30,110,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px}
+  h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;line-height:1.08}
+  button{font-family:inherit;cursor:pointer}
+  .app{display:grid;grid-template-columns:232px 1fr;min-height:100vh}
+
+  /* sidebar */
+  .side{background:#fff;border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:1.06rem;padding:6px 8px 20px}
+  .brand .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--violet),var(--coral));display:grid;place-items:center;color:#fff}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:11px;color:var(--muted);font-weight:600;font-size:.92rem;border:0;background:none;width:100%;text-align:left;transition:background .14s,color .14s;position:relative}
+  .nav-item:hover{background:var(--paper);color:var(--ink)}
+  .nav-item.active{background:var(--violet);color:#fff}
+  .nav-item .ic{width:20px;text-align:center;font-size:1.05rem}
+  .nav-item .ndot{position:absolute;right:12px;background:var(--coral);color:#fff;font-size:.62rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;font-family:'Space Mono'}
+  .side-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:14px}
+  .profile-chip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:11px;cursor:pointer}
+  .profile-chip:hover{background:var(--paper)}
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--teal));display:grid;place-items:center;color:#fff;font-weight:700;font-size:.9rem;flex-shrink:0}
+  .profile-chip .nm{font-weight:600;font-size:.86rem}.profile-chip .rl{font-size:.72rem;color:var(--muted)}
+
+  /* main */
+  .main{padding:26px 32px 60px;overflow-x:hidden;max-width:1100px}
+  .greet{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+  .greet h1{font-size:1.7rem;font-weight:800}
+  .greet p{color:var(--muted);font-size:.9rem;margin-top:4px}
+  .search{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 13px;width:260px;max-width:100%}
+  .search input{border:0;outline:0;font-family:inherit;font-size:.88rem;width:100%;background:none;color:var(--ink)}
+
+  .panel{display:none;animation:fade .3s ease}
+  .panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .row-head{display:flex;align-items:center;justify-content:space-between;margin:26px 0 14px}
+  .row-head h3{font-size:1.12rem}
+  .row-head a{font-size:.82rem;color:var(--violet);font-weight:600;cursor:pointer}
+
+  /* stat strip */
+  .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .mini{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  .mini .n{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.5rem}
+  .mini .l{color:var(--muted);font-size:.78rem;margin-top:2px}
+  .mini .ic{font-size:1.1rem;margin-bottom:6px}
+
+  /* continue row (horizontal scroll) */
+  .hscroll{display:flex;gap:16px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory}
+  .hscroll::-webkit-scrollbar{height:6px}.hscroll::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+  .cont-card{flex:0 0 250px;scroll-snap-align:start;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:transform .16s,box-shadow .16s}
+  .cont-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .cont-card .cv{height:96px;display:grid;place-items:center;font-size:2rem}
+  .cont-card .bd{padding:14px}
+  .cont-card h4{font-size:.96rem;margin-bottom:8px}
+  .cont-card .meta{font-size:.74rem;color:var(--muted);margin-bottom:10px}
+  .bar{height:6px;background:var(--line-2);border-radius:3px;overflow:hidden}
+  .bar > span{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--violet-soft));border-radius:3px}
+  .bar-lbl{font-size:.7rem;color:var(--muted);margin-top:6px;font-weight:600}
+
+  /* grid cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+  .item{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:transform .16s,box-shadow .16s}
+  .item:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+  .item .cv{height:118px;display:grid;place-items:center;font-size:2.4rem;position:relative;cursor:pointer}
+  .item .heart{position:absolute;top:9px;right:9px;width:30px;height:30px;border-radius:9px;border:0;background:rgba(255,255,255,.85);color:var(--ink);font-size:.95rem;display:grid;place-items:center}
+  .item .heart.on{color:var(--coral)}
+  .item .bd{padding:13px;flex:1;display:flex;flex-direction:column;gap:7px}
+  .item h4{font-size:.94rem}
+  .item .meta{font-size:.73rem;color:var(--muted)}
+  .fmts{display:flex;gap:5px;margin-top:auto}
+  .fmt{font-size:.66rem;font-weight:700;padding:3px 7px;border-radius:6px;background:var(--paper);color:var(--ink-2)}
+  .item .open{margin:0 13px 13px;border:0;background:var(--violet);color:#fff;font-weight:600;font-size:.82rem;border-radius:9px;padding:9px}
+  .item .open:hover{background:var(--ink-2)}
+
+  /* gradient covers */
+  .g1{background:linear-gradient(135deg,#6E62E6,#FF5C7A)}.g2{background:linear-gradient(135deg,#FFA62B,#FF5C7A)}
+  .g3{background:linear-gradient(135deg,#15B8A6,#4B3FBE)}.g4{background:linear-gradient(135deg,#4B3FBE,#15B8A6)}
+  .g5{background:linear-gradient(135deg,#FF5C7A,#FFA62B)}.g6{background:linear-gradient(135deg,#6E62E6,#15B8A6)}
+
+  /* filter chips */
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .fchip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 15px;font-size:.83rem;font-weight:600;color:var(--ink);cursor:pointer;transition:all .14s}
+  .fchip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  /* notifications */
+  .notif{display:flex;gap:13px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:10px}
+  .notif .ni{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:1.1rem;flex-shrink:0;color:#fff}
+  .notif .nt{flex:1}.notif .nt b{font-size:.9rem}.notif .nt p{font-size:.82rem;color:var(--muted);margin-top:2px}
+  .notif .when{font-size:.7rem;color:var(--muted);white-space:nowrap}
+  .notif.unread{border-color:var(--violet-soft);background:#FBFAFF}
+  .unread-dot{width:8px;height:8px;border-radius:50%;background:var(--coral);margin-top:6px}
+
+  /* profile */
+  .prof-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:22px}
+  .card h3{font-size:1.05rem;margin-bottom:4px}.card .sub{color:var(--muted);font-size:.82rem;margin-bottom:16px}
+  .fld{margin-bottom:13px}.fld label{font-size:.78rem;font-weight:600;color:var(--ink-2);display:block;margin-bottom:6px}
+  .fld input,.fld select{width:100%;font-family:inherit;font-size:.9rem;border:1px solid var(--line);border-radius:11px;padding:11px 13px;outline:none;background:#fff;color:var(--ink)}
+  .fld input:focus,.fld select:focus{border-color:var(--violet-soft)}
+  .type-pick{display:flex;gap:8px;flex-wrap:wrap}
+  .type-opt{flex:1;min-width:90px;border:1px solid var(--line);border-radius:11px;padding:11px 8px;text-align:center;font-size:.82rem;font-weight:600;cursor:pointer}
+  .type-opt.on{background:var(--violet);color:#fff;border-color:var(--violet)}
+  .btn{border:0;border-radius:11px;font-weight:600;font-size:.88rem;padding:11px 18px;cursor:pointer}
+  .btn-solid{background:var(--violet);color:#fff}.btn-solid:hover{background:var(--ink-2)}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-ghost:hover{background:var(--paper)}
+
+  /* reader overlay */
+  .reader{position:fixed;inset:0;background:var(--paper);z-index:120;display:none;flex-direction:column}
+  .reader.on{display:flex}
+  .reader-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .reader-top .ttl{font-family:'Bricolage Grotesque';font-weight:700;font-size:1.05rem}
+  .reader-top .meta{font-size:.74rem;color:var(--muted)}
+  .mode-switch{display:flex;gap:6px}
+  .mode-btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 12px;font-size:.8rem;font-weight:600;cursor:pointer}
+  .mode-btn.on{background:var(--violet);color:#fff;border-color:var(--violet)}
+  .reader-actions{display:flex;gap:8px}
+  .ricon{border:1px solid var(--line);background:#fff;border-radius:9px;width:38px;height:38px;cursor:pointer;font-size:1rem}
+  .reader-body{flex:1;overflow-y:auto;display:grid;place-items:start center;padding:30px 20px}
+
+  /* read mode */
+  .page{max-width:640px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:38px 42px;box-shadow:var(--shadow-sm)}
+  .page h2{font-size:1.5rem;margin-bottom:16px}
+  .page p{font-size:1rem;line-height:1.75;color:#2c2950;margin-bottom:14px}
+  .pager{display:flex;align-items:center;justify-content:space-between;max-width:640px;width:100%;margin-top:18px}
+  .pager .pg{font-size:.8rem;color:var(--muted);font-weight:600}
+  .resumed{font-size:.78rem;color:var(--teal);font-weight:600;margin-bottom:14px;display:none}
+  .resumed.show{display:block}
+
+  /* listen / watch */
+  .player{max-width:560px;width:100%;background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;text-align:center;box-shadow:var(--shadow-sm)}
+  .player .art{height:200px;border-radius:16px;display:grid;place-items:center;font-size:4rem;margin-bottom:22px}
+  .player .video-art{position:relative}
+  .player .pttl{font-family:'Bricolage Grotesque';font-weight:700;font-size:1.2rem;margin-bottom:4px}
+  .player .pmeta{font-size:.8rem;color:var(--muted);margin-bottom:20px}
+  .pbar{height:7px;background:var(--line-2);border-radius:4px;overflow:hidden;cursor:pointer;margin-bottom:8px}
+  .pbar > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--teal))}
+  .ptimes{display:flex;justify-content:space-between;font-size:.74rem;color:var(--muted);font-family:'Space Mono';margin-bottom:18px}
+  .pcontrols{display:flex;align-items:center;justify-content:center;gap:20px}
+  .play-btn{width:62px;height:62px;border-radius:50%;border:0;background:var(--violet);color:#fff;font-size:1.5rem;cursor:pointer;display:grid;place-items:center}
+  .play-btn:hover{background:var(--ink-2)}
+  .skip{border:0;background:none;font-size:1.4rem;cursor:pointer;color:var(--muted)}
+
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:500;transition:transform .3s;z-index:200;box-shadow:var(--shadow)}
+
+  .hamburger{display:none}
+  @media(max-width:880px){
+    .app{grid-template-columns:1fr}
+    .side{position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;flex-direction:row;border-right:0;border-top:1px solid var(--line);padding:8px;z-index:80;justify-content:space-around}
+    .brand,.side-foot{display:none}
+    .nav-item{flex-direction:column;gap:3px;font-size:.66rem;padding:6px 4px}
+    .nav-item .ic{font-size:1.2rem}.nav-item .ndot{position:static;margin-top:0}
+    .nav-item.active{background:none;color:var(--violet)}
+    .main{padding:18px 16px 90px;max-width:100%}
+    .stat-strip{grid-template-columns:1fr 1fr}.prof-grid{grid-template-columns:1fr}
+    .search{width:100%}
+  }  .modal-bg{position:fixed;inset:0;background:rgba(22,20,46,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:130;backdrop-filter:blur(3px)}
+  .modal-bg.on{display:flex}
+  .smb{background:#fff;border-radius:18px;padding:24px;max-width:360px;width:100%;box-shadow:var(--shadow)}
+  .smb h3{font-size:1.2rem;margin-bottom:4px}.smb p{color:var(--muted);font-size:.82rem;margin-bottom:16px}
+  .share-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .share-opt{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-weight:600;font-size:.86rem;color:var(--ink);background:#fff;cursor:pointer;text-decoration:none}
+  .share-opt:hover{background:var(--paper)}
+  .share-opt .si{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.82rem;font-weight:700;flex-shrink:0}
+  .s-wa{background:#25D366}.s-x{background:#111}.s-fb{background:#1877F2}.s-tg{background:#29A9EB}.s-li{background:#0A66C2}.s-cp{background:var(--violet)}
+  .item .cv .heart.shareb{left:9px;right:auto}
+  /* TV mode: 10-foot UI navigable by remote/arrow keys */
+  .tvbtn{position:fixed;right:18px;bottom:18px;z-index:75;border:0;border-radius:999px;background:var(--ink);color:#fff;font-weight:600;font-size:.84rem;padding:11px 16px;box-shadow:var(--shadow);cursor:pointer}
+  body.tv{font-size:17px}
+  body.tv .main{max-width:1300px}
+  body.tv .greet h1{font-size:2.1rem}
+  body.tv .item .cv{height:150px;font-size:3rem}
+  body.tv .item h4{font-size:1.1rem}
+  body.tv .cont-card{flex-basis:300px}
+  body.tv .nav-item{font-size:1.02rem;padding:14px}
+  body.tv .btn,body.tv .open,body.tv .fchip{padding:13px 20px;font-size:1rem}
+  body.tv :focus-visible{outline:4px solid var(--marigold);outline-offset:3px}
+  body.tv .item:focus-within,body.tv .cont-card:focus-within{transform:translateY(-4px);box-shadow:var(--shadow)}
+  :focus-visible{outline:3px solid var(--violet-soft);outline-offset:2px;border-radius:6px}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="mark">✦</span> New Age Learning</div>
+    <button class="nav-item active" data-p="home"><span class="ic">🏠</span> Home</button>
+    <button class="nav-item" data-p="browse"><span class="ic">🧭</span> Browse</button>
+    <button class="nav-item" data-p="wishlist"><span class="ic">❤</span> Wishlist <span class="ndot" id="wlDot" style="display:none">0</span></button>
+    <button class="nav-item" data-p="notifs"><span class="ic">🔔</span> Alerts <span class="ndot" id="nfDot">2</span></button>
+    <button class="nav-item" data-p="profile"><span class="ic">👤</span> Profile</button>
+    <div class="side-foot">
+      <div class="profile-chip" data-p="profile">
+        <div class="avatar" id="avatar">A</div>
+        <div><div class="nm" id="chipName">Asha R</div><div class="rl" id="chipRole">Student</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- HOME -->
+    <section class="panel on" data-panel="home">
+      <div class="greet">
+        <div><h1 id="hello">Welcome back, Asha 👋</h1><p>Pick up where you left off, or discover something new.</p></div>
+        <div class="search"><span>🔍</span><input id="homeSearch" placeholder="Search books & content…" readonly onclick="go('browse')"></div>
+      </div>
+
+      <div class="stat-strip">
+        <div class="mini"><div class="ic">📖</div><div class="n" id="sIn">2</div><div class="l">In progress</div></div>
+        <div class="mini"><div class="ic">✅</div><div class="n" id="sDone">5</div><div class="l">Completed</div></div>
+        <div class="mini"><div class="ic">❤</div><div class="n" id="sWish">0</div><div class="l">Wishlist</div></div>
+        <div class="mini"><div class="ic">🔥</div><div class="n">7</div><div class="l">Day streak</div></div>
+      </div>
+
+      <div class="row-head"><h3>Continue learning</h3><a data-p="browse">Browse all</a></div>
+      <div class="hscroll" id="continueRow"></div>
+
+      <div class="row-head"><h3>Recommended for you</h3><a data-p="browse">See more</a></div>
+      <div class="grid" id="recoGrid"></div>
+    </section>
+
+    <!-- BROWSE -->
+    <section class="panel" data-panel="browse">
+      <div class="greet"><div><h1>Browse the library</h1><p>Read, listen or watch — across every subject.</p></div>
+        <div class="search"><span>🔍</span><input id="browseSearch" placeholder="Search titles…"></div>
+      </div>
+      <div class="chips" id="catChips"></div>
+      <div class="chips" id="fmtChips"></div>
+      <div class="grid" id="browseGrid"></div>
+    </section>
+
+    <!-- WISHLIST -->
+    <section class="panel" data-panel="wishlist">
+      <div class="greet"><div><h1>My wishlist</h1><p>Everything you've saved to come back to.</p></div></div>
+      <div class="grid" id="wishGrid"></div>
+      <div id="wishEmpty" style="display:none;text-align:center;color:var(--muted);padding:60px 0">
+        <div style="font-size:2.4rem;margin-bottom:10px">🤍</div>Nothing saved yet. Tap the heart on any book to save it here.
+      </div>
+    </section>
+
+    <!-- NOTIFICATIONS -->
+    <section class="panel" data-panel="notifs">
+      <div class="greet"><div><h1>Alerts</h1><p>Updates and recommendations picked for you.</p></div>
+        <button class="btn btn-ghost" id="markAll">Mark all read</button>
+      </div>
+      <div id="notifList"></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="panel" data-panel="profile">
+      <div class="greet"><div><h1>My profile</h1><p>Your details and learning preferences.</p></div></div>
+      <div class="prof-grid">
+        <div class="card">
+          <h3>Details</h3><div class="sub">Used to personalise your home.</div>
+          <div class="fld"><label>Name</label><input id="pfName" value="Asha R"></div>
+          <div class="fld"><label>Mobile</label><input value="98xxxxxxxx" readonly></div>
+          <div class="fld"><label>City</label><input id="pfCity" value="Bengaluru"></div>
+          <div class="fld"><label>Interested in</label>
+            <select id="pfInterest"><option>AI</option><option selected>Smart money</option><option>Exam prep</option><option>Future skills</option><option>Stories for kids</option></select>
+          </div>
+          <button class="btn btn-solid" id="saveProfile">Save changes</button>
+        </div>
+        <div class="card">
+          <h3>I'm learning as a…</h3><div class="sub">Changes the content we surface for you.</div>
+          <div class="type-pick" id="typePick">
+            <div class="type-opt" data-t="young_explorer">Young Explorer</div>
+            <div class="type-opt on" data-t="student">Student</div>
+            <div class="type-opt" data-t="professional">Professional</div>
+          </div>
+          <div style="margin-top:22px">
+            <h3 style="font-size:.95rem;margin-bottom:10px">This month</h3>
+            <div class="stat-strip" style="grid-template-columns:1fr 1fr">
+              <div class="mini"><div class="n">12</div><div class="l">Hours learning</div></div>
+              <div class="mini"><div class="n">7</div><div class="l">Day streak 🔥</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- READER / PLAYER OVERLAY -->
+<div class="reader" id="reader">
+  <div class="reader-top">
+    <div><div class="ttl" id="rTtl">Title</div><div class="meta" id="rMeta">—</div></div>
+    <div class="mode-switch" id="modeSwitch"></div>
+    <div class="reader-actions">
+      <button class="ricon" id="rWish" title="Save">♡</button>
+      <button class="ricon" id="rShare" title="Share">↗</button>
+      <button class="ricon" id="rClose" title="Close">✕</button>
+    </div>
+  </div>
+  <div class="reader-body" id="readerBody"></div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="modal-bg" id="shareModal">
+  <div class="smb">
+    <button class="ricon" id="shareClose" style="float:right" aria-label="Close">✕</button>
+    <h3>Share</h3><p id="shareSub">Share this with a friend.</p>
+    <div class="share-grid">
+      <a class="share-opt" id="sWa" target="_blank" rel="noopener"><span class="si s-wa">✆</span> WhatsApp</a>
+      <a class="share-opt" id="sX" target="_blank" rel="noopener"><span class="si s-x">𝕏</span> X</a>
+      <a class="share-opt" id="sFb" target="_blank" rel="noopener"><span class="si s-fb">f</span> Facebook</a>
+      <a class="share-opt" id="sTg" target="_blank" rel="noopener"><span class="si s-tg">➤</span> Telegram</a>
+      <a class="share-opt" id="sLi" target="_blank" rel="noopener"><span class="si s-li">in</span> LinkedIn</a>
+      <button class="share-opt" id="sCopy"><span class="si s-cp">🔗</span> Copy link</button>
+    </div>
+  </div>
+</div>
+
+<button class="tvbtn" id="tvBtn">📺 TV mode</button>
+
+<div id="toast"></div>
+
+<script>
+/* ---------- data ---------- */
+const PAGES=[
+  {h:"What is money, really?",p:["Money is just a tool we all agree to use. Long before coins and notes, people swapped what they had — a basket of rice for a jug of milk.","The trouble was matching needs. Money solved that: a single thing everyone accepts, so you can sell rice today and buy milk next week.","The big idea to remember: money is a store of value and a way to trade. Looking after it well is a skill anyone can learn."]},
+  {h:"Saving before spending",p:["The simplest money habit in the world is to pay yourself first. When money comes in, set a little aside before you spend the rest.","Even a small amount, saved regularly, adds up faster than people expect — because it keeps growing on top of itself.","Try this: decide on a number, however small, and save it every single time money reaches you. Consistency beats size."]},
+  {h:"Letting money grow",p:["Saved money can do more than sit still. When you invest, you put it to work so it can grow over time.","Growth takes patience. The earlier you start, the more time your money has to build — which is why starting young is such an advantage.","Start simple, learn as you go, and never invest money you can't afford to set aside for a while."]},
+];
+const MOCK_ITEMS=[
+  {id:1,title:"Smart Money for Teens",cv:"💡",g:"g2",age:"Grades 8–12",cat:"Smart Money",fmts:["read","listen"],prog:45,wish:false},
+  {id:2,title:"AI for Curious Kids",cv:"🤖",g:"g1",age:"Ages 8–12",cat:"AI",fmts:["read","listen","watch"],prog:0,wish:false},
+  {id:3,title:"Future Skills Playbook",cv:"🚀",g:"g3",age:"Professional",cat:"Future",fmts:["read","watch"],prog:70,wish:false},
+  {id:4,title:"Stories of Young India",cv:"📖",g:"g4",age:"Ages 5–12",cat:"Stories",fmts:["read","listen"],prog:0,wish:false},
+  {id:5,title:"Crack Your Exams",cv:"📝",g:"g5",age:"Grades 8–12",cat:"Exam prep",fmts:["read","watch"],prog:0,wish:false},
+  {id:6,title:"Investing Basics",cv:"📈",g:"g6",age:"Professional",cat:"Smart Money",fmts:["read","listen","watch"],prog:0,wish:false},
+  {id:7,title:"Meet the Robots",cv:"🦾",g:"g1",age:"Ages 5–12",cat:"AI",fmts:["watch","read"],prog:0,wish:false},
+  {id:8,title:"The Future of Work",cv:"🌐",g:"g3",age:"Professional",cat:"Future",fmts:["read"],prog:0,wish:false},
+];
+const FMT_LABEL={read:"📖 Read",listen:"🎧 Listen",watch:"▶ Watch"};
+let items=[];
+let progress={1:{percent:45,page:1},3:{percent:70,page:0}}; // saved positions
+
+/* ====================================================================
+   API LAYER — the only place this portal talks to the backend.
+   To go live: set USE_MOCK=false and API_BASE to your server URL.
+   Every method below maps to an endpoint in api-reference.md.
+==================================================================== */
+const API_BASE='https://api.newagelearning.in';
+const USE_MOCK=true;          // ← flip to false to use the real backend
+let AUTH_TOKEN=null;          // set this after /api/auth/login
+const FMAP={pdf:'read',audio:'listen',video:'watch'};
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+async function call(path,opts={}){
+  const res=await fetch(API_BASE+path,{...opts,headers:{'Content-Type':'application/json',
+    ...(AUTH_TOKEN?{Authorization:'Bearer '+AUTH_TOKEN}:{}),...(opts.headers||{})}});
+  if(!res.ok)throw new Error('API '+res.status);
+  return res.status===204?null:res.json();
+}
+const api={
+  async getContent(){                                  // GET /api/content
+    if(USE_MOCK){await wait(220);return MOCK_ITEMS;}
+    const rows=await call('/api/content');
+    return rows.map((r,i)=>({id:r.id,title:r.title,age:r.age_group||'',cat:r.cat||'',
+      cv:'📘',g:'g'+((i%6)+1),fmts:(r.formats||[]).map(f=>FMAP[f]).filter(Boolean),prog:0,wish:false}));
+  },
+  async toggleWishlist(id,wished){                     // POST/DELETE /api/me/wishlist/:id
+    const it=MOCK_ITEMS.find(i=>i.id===id);if(it)it.wish=wished;
+    if(USE_MOCK)return;
+    return wished?call('/api/me/wishlist/'+id,{method:'POST'}):call('/api/me/wishlist/'+id,{method:'DELETE'});
+  },
+  async saveProgress(id,data){                         // PUT /api/me/progress/:id
+    progress[id]=data;const it=MOCK_ITEMS.find(i=>i.id===id);if(it)it.prog=data.percent;
+    if(USE_MOCK)return;
+    return call('/api/me/progress/'+id,{method:'PUT',body:JSON.stringify(data)});
+  },
+  async logEvent(type,contentId){                      // POST /api/events
+    if(USE_MOCK)return;
+    return call('/api/events',{method:'POST',body:JSON.stringify({event_type:type,content_id:contentId})});
+  }
+};
+
+/* ---------- nav ---------- */
+const navItems=[...document.querySelectorAll('.nav-item')],panels=[...document.querySelectorAll('.panel')];
+function go(p){navItems.forEach(n=>n.classList.toggle('active',n.dataset.p===p));panels.forEach(pl=>pl.classList.toggle('on',pl.dataset.panel===p));window.scrollTo(0,0);if(p==='wishlist')renderWish();}
+document.querySelectorAll('[data-p]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.p)));
+
+/* ---------- toast ---------- */
+let tT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.transform='translateX(-50%) translateY(0)';clearTimeout(tT);tT=setTimeout(()=>t.style.transform='translateX(-50%) translateY(90px)',2400);}
+
+/* ---------- cards ---------- */
+function itemCard(it){
+  const heart=it.wish?'♥':'♡';
+  return `<div class="item" data-id="${it.id}">
+    <div class="cv ${it.g}" data-open="${it.id}">${it.cv}
+      <button class="heart shareb" data-shareitem="${it.title}" aria-label="Share">↗</button>
+      <button class="heart ${it.wish?'on':''}" data-wish="${it.id}">${heart}</button></div>
+    <div class="bd"><h4>${it.title}</h4><div class="meta">${it.age} · ${it.cat}</div>
+      <div class="fmts">${it.fmts.map(f=>`<span class="fmt">${FMT_LABEL[f]}</span>`).join('')}</div></div>
+    <button class="open" data-open="${it.id}">${it.prog>0?'Continue':'Start'}</button></div>`;
+}
+function bindCards(scope){
+  scope.querySelectorAll('[data-open]').forEach(e=>e.addEventListener('click',()=>openReader(+e.dataset.open)));
+  scope.querySelectorAll('[data-wish]').forEach(e=>e.addEventListener('click',ev=>{ev.stopPropagation();toggleWish(+e.dataset.wish);}));
+  scope.querySelectorAll('[data-shareitem]').forEach(e=>e.addEventListener('click',ev=>{ev.stopPropagation();doShare(e.dataset.shareitem);}));
+}
+
+/* ---------- home ---------- */
+function renderHome(){
+  const cont=items.filter(i=>i.prog>0);
+  document.getElementById('continueRow').innerHTML=cont.map(it=>`
+    <div class="cont-card" data-open="${it.id}">
+      <div class="cv ${it.g}">${it.cv}</div>
+      <div class="bd"><h4>${it.title}</h4><div class="meta">${it.age}</div>
+        <div class="bar"><span style="width:${it.prog}%"></span></div>
+        <div class="bar-lbl">${it.prog}% · resume</div></div></div>`).join('');
+  document.getElementById('continueRow').querySelectorAll('[data-open]').forEach(e=>e.addEventListener('click',()=>openReader(+e.dataset.open)));
+  const reco=items.filter(i=>i.prog===0).slice(0,4);
+  const rg=document.getElementById('recoGrid');rg.innerHTML=reco.map(itemCard).join('');bindCards(rg);
+  document.getElementById('sIn').textContent=cont.length;
+}
+
+/* ---------- browse ---------- */
+let catFilter='All',fmtFilter='all';
+function buildFilters(){
+  const cats=['All',...new Set(items.map(i=>i.cat))];
+  document.getElementById('catChips').innerHTML=cats.map(c=>`<button class="fchip ${c==='All'?'on':''}" data-cat="${c}">${c}</button>`).join('');
+  document.getElementById('fmtChips').innerHTML=['all','read','listen','watch'].map(f=>`<button class="fchip ${f==='all'?'on':''}" data-fmt="${f}">${f==='all'?'All formats':FMT_LABEL[f]}</button>`).join('');
+  document.querySelectorAll('[data-cat]').forEach(b=>b.addEventListener('click',()=>{catFilter=b.dataset.cat;document.querySelectorAll('[data-cat]').forEach(x=>x.classList.toggle('on',x===b));renderBrowse();}));
+  document.querySelectorAll('[data-fmt]').forEach(b=>b.addEventListener('click',()=>{fmtFilter=b.dataset.fmt;document.querySelectorAll('[data-fmt]').forEach(x=>x.classList.toggle('on',x===b));renderBrowse();}));
+}
+document.getElementById('browseSearch').addEventListener('input',renderBrowse);
+function renderBrowse(){
+  const term=(document.getElementById('browseSearch').value||'').toLowerCase();
+  const list=items.filter(i=>(catFilter==='All'||i.cat===catFilter)&&(fmtFilter==='all'||i.fmts.includes(fmtFilter))&&i.title.toLowerCase().includes(term));
+  const g=document.getElementById('browseGrid');
+  g.innerHTML=list.length?list.map(itemCard).join(''):'<p style="color:var(--muted)">No matches — try another filter.</p>';
+  bindCards(g);
+}
+
+/* ---------- wishlist ---------- */
+function toggleWish(id){const it=items.find(i=>i.id===id);it.wish=!it.wish;api.toggleWishlist(id,it.wish);api.logEvent(it.wish?'wishlist_add':'wishlist_remove',id);toast(it.wish?'Saved to wishlist':'Removed from wishlist');refreshAll();}
+function renderWish(){
+  const list=items.filter(i=>i.wish);
+  document.getElementById('wishEmpty').style.display=list.length?'none':'block';
+  const g=document.getElementById('wishGrid');g.innerHTML=list.map(itemCard).join('');bindCards(g);
+}
+function refreshWishCount(){const n=items.filter(i=>i.wish).length;document.getElementById('sWish').textContent=n;const d=document.getElementById('wlDot');d.style.display=n?'grid':'none';d.textContent=n;}
+
+/* ---------- notifications ---------- */
+let notifs=[
+  {ic:'🤖',c:'var(--violet)',t:'New AI content for you',p:'“Meet the Robots” just landed in your favourite topic.',w:'2h',unread:true},
+  {ic:'🔖',c:'var(--teal)',t:'Pick up where you left off',p:'You’re 45% through “Smart Money for Teens”.',w:'1d',unread:true},
+  {ic:'🔥',c:'var(--marigold)',t:'7-day streak!',p:'You’ve learned 7 days in a row. Keep it going.',w:'1d',unread:false},
+];
+function renderNotifs(){
+  document.getElementById('notifList').innerHTML=notifs.map((n,i)=>`
+    <div class="notif ${n.unread?'unread':''}" data-n="${i}">
+      <div class="ni" style="background:${n.c}">${n.ic}</div>
+      <div class="nt"><b>${n.t}</b><p>${n.p}</p></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><span class="when">${n.w}</span>${n.unread?'<span class="unread-dot"></span>':''}</div>
+    </div>`).join('');
+  document.querySelectorAll('[data-n]').forEach(e=>e.addEventListener('click',()=>{notifs[+e.dataset.n].unread=false;renderNotifs();updateNfDot();}));
+}
+function updateNfDot(){const n=notifs.filter(x=>x.unread).length;const d=document.getElementById('nfDot');d.style.display=n?'grid':'none';d.textContent=n;}
+document.getElementById('markAll').addEventListener('click',()=>{notifs.forEach(n=>n.unread=false);renderNotifs();updateNfDot();toast('All caught up');});
+
+/* ---------- profile ---------- */
+const ROLE_LABEL={young_explorer:'Young Explorer',student:'Student',professional:'Professional'};
+let learnerType='student';
+document.querySelectorAll('#typePick .type-opt').forEach(o=>o.addEventListener('click',()=>{
+  learnerType=o.dataset.t;document.querySelectorAll('#typePick .type-opt').forEach(x=>x.classList.toggle('on',x===o));
+  document.getElementById('chipRole').textContent=ROLE_LABEL[learnerType];toast('Now showing '+ROLE_LABEL[learnerType]+' content');
+}));
+document.getElementById('saveProfile').addEventListener('click',()=>{
+  const nm=document.getElementById('pfName').value.trim()||'Learner';
+  document.getElementById('chipName').textContent=nm;document.getElementById('avatar').textContent=nm[0].toUpperCase();
+  document.getElementById('hello').textContent='Welcome back, '+nm.split(' ')[0]+' 👋';
+  toast('Profile saved');
+});
+
+/* ---------- reader / player ---------- */
+const reader=document.getElementById('reader'),readerBody=document.getElementById('readerBody');
+let current=null,mode='read',readPage=0,playTimer=null,playPct=0,playing=false;
+function openReader(id){
+  current=items.find(i=>i.id===id);if(!current)return;
+  api.logEvent('view',id);
+  document.getElementById('rTtl').textContent=current.title;
+  document.getElementById('rMeta').textContent=current.age+' · '+current.cat;
+  document.getElementById('rWish').textContent=current.wish?'♥':'♡';
+  document.getElementById('rWish').style.color=current.wish?'var(--coral)':'';
+  document.getElementById('modeSwitch').innerHTML=current.fmts.map(f=>`<button class="mode-btn" data-mode="${f}">${FMT_LABEL[f]}</button>`).join('');
+  document.querySelectorAll('#modeSwitch .mode-btn').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
+  setMode(current.fmts[0]);
+  reader.classList.add('on');
+}
+function setMode(m){
+  mode=m;stopPlay();
+  document.querySelectorAll('#modeSwitch .mode-btn').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+  if(m==='read')renderRead();else renderPlayer(m);
+}
+function renderRead(){
+  const saved=progress[current.id];
+  readPage=(saved&&saved.page)||0;
+  const pg=PAGES[readPage%PAGES.length];
+  readerBody.innerHTML=`
+    <div style="max-width:640px;width:100%">
+      <div class="resumed ${saved&&saved.page>0?'show':''}">↩ Resumed at page ${readPage+1}</div>
+      <div class="page"><h2>${pg.h}</h2>${pg.p.map(t=>`<p>${t}</p>`).join('')}</div>
+      <div class="pager"><button class="btn btn-ghost" id="prevPg">← Previous</button>
+        <span class="pg">Page ${readPage+1} of ${PAGES.length}</span>
+        <button class="btn btn-solid" id="nextPg">Next →</button></div></div>`;
+  document.getElementById('prevPg').onclick=()=>{if(readPage>0){readPage--;saveRead();renderRead();}};
+  document.getElementById('nextPg').onclick=()=>{if(readPage<PAGES.length-1){readPage++;saveRead();renderRead();}else toast('You finished this one! 🎉');};
+}
+function saveRead(){
+  const pct=Math.round(((readPage+1)/PAGES.length)*100);
+  api.saveProgress(current.id,{percent:pct,page:readPage});
+  toast('Progress saved');refreshAll();
+}
+function renderPlayer(m){
+  const saved=progress[current.id];playPct=(saved&&saved.percent)||0;
+  const dur=m==='listen'?'12:40':'08:15';
+  readerBody.innerHTML=`
+    <div class="player">
+      <div class="art ${current.g} ${m==='watch'?'video-art':''}">${m==='watch'?'▶':current.cv}</div>
+      <div class="pttl">${current.title}</div><div class="pmeta">${m==='listen'?'Audio · voice content':'Video · view content'}</div>
+      <div class="pbar" id="pbar"><span id="pfill" style="width:${playPct}%"></span></div>
+      <div class="ptimes"><span id="pcur">0:00</span><span>${dur}</span></div>
+      <div class="pcontrols"><button class="skip" id="back10">↺</button>
+        <button class="play-btn" id="playBtn">▶</button>
+        <button class="skip" id="fwd10">↻</button></div>
+    </div>`;
+  document.getElementById('playBtn').onclick=togglePlay;
+  document.getElementById('back10').onclick=()=>{playPct=Math.max(0,playPct-8);upd();};
+  document.getElementById('fwd10').onclick=()=>{playPct=Math.min(100,playPct+8);upd();};
+  document.getElementById('pbar').onclick=e=>{const r=e.currentTarget.getBoundingClientRect();playPct=Math.round((e.clientX-r.left)/r.width*100);upd();};
+  function upd(){document.getElementById('pfill').style.width=playPct+'%';}
+}
+function togglePlay(){
+  playing=!playing;const b=document.getElementById('playBtn');if(!b)return;b.textContent=playing?'⏸':'▶';
+  if(playing){playTimer=setInterval(()=>{playPct=Math.min(100,playPct+1);const f=document.getElementById('pfill');if(f)f.style.width=playPct+'%';
+    api.saveProgress(current.id,{percent:playPct,page:0});
+    if(playPct>=100){stopPlay();toast('Finished! 🎉');refreshAll();}},400);}
+  else stopPlay(false);
+}
+function stopPlay(save=true){if(playTimer){clearInterval(playTimer);playTimer=null;}playing=false;const b=document.getElementById('playBtn');if(b)b.textContent='▶';if(save&&current)refreshAll();}
+document.getElementById('rClose').onclick=()=>{stopPlay();reader.classList.remove('on');renderHome();};
+document.getElementById('rWish').onclick=()=>{toggleWish(current.id);document.getElementById('rWish').textContent=current.wish?'♥':'♡';document.getElementById('rWish').style.color=current.wish?'var(--coral)':'';};
+document.getElementById('rShare').onclick=()=>doShare(current?current.title:'');
+
+/* ---------- refresh ---------- */
+function refreshAll(){renderHome();renderBrowse();renderWish();refreshWishCount();}
+
+/* ---------- init: load everything from the API ---------- */
+async function init(){
+  document.getElementById('recoGrid').innerHTML='<p style="color:var(--muted)">Loading your library…</p>';
+  try{ items=await api.getContent(); }
+  catch(e){ items=MOCK_ITEMS; toast('Backend unreachable — showing offline data'); }
+  buildFilters();
+  refreshAll();renderNotifs();updateNfDot();
+}
+init();
+
+/* ---------- share (WhatsApp + social + copy, native first) ---------- */
+const shareModal=document.getElementById('shareModal');
+let shareUrl=location.href, shareText='';
+async function doShare(title){
+  shareUrl=location.href;
+  shareText=title?('Check out "'+title+'" on New Age Learning'):'Learning on New Age Learning';
+  document.getElementById('shareSub').textContent=title?('Share "'+title+'" with a friend.'):'Share this with a friend.';
+  if(navigator.share){try{await navigator.share({title:title||'New Age Learning',text:shareText,url:shareUrl});return;}catch(e){if(e&&e.name==='AbortError')return;}}
+  const u=encodeURIComponent(shareUrl),t=encodeURIComponent(shareText);
+  document.getElementById('sWa').href='https://wa.me/?text='+t+'%20'+u;
+  document.getElementById('sX').href='https://twitter.com/intent/tweet?text='+t+'&url='+u;
+  document.getElementById('sFb').href='https://www.facebook.com/sharer/sharer.php?u='+u;
+  document.getElementById('sTg').href='https://t.me/share/url?url='+u+'&text='+t;
+  document.getElementById('sLi').href='https://www.linkedin.com/sharing/share-offsite/?url='+u;
+  shareModal.classList.add('on');
+}
+document.getElementById('shareClose').addEventListener('click',()=>shareModal.classList.remove('on'));
+shareModal.addEventListener('click',e=>{if(e.target===shareModal)shareModal.classList.remove('on');});
+document.getElementById('sCopy').addEventListener('click',()=>{(navigator.clipboard&&navigator.clipboard.writeText(shareUrl));toast('Link copied');shareModal.classList.remove('on');});
+shareModal.querySelectorAll('a.share-opt').forEach(a=>a.addEventListener('click',()=>shareModal.classList.remove('on')));
+
+/* ---------- TV mode + remote/arrow-key navigation ---------- */
+const tvBtn=document.getElementById('tvBtn');
+tvBtn.addEventListener('click',()=>{
+  const on=document.body.classList.toggle('tv');
+  tvBtn.textContent=on?'📺 TV mode: on':'📺 TV mode';
+  toast(on?'TV mode on — use the arrow keys or remote to move':'TV mode off');
+  if(on){const f=document.querySelector('.nav-item.active');if(f)f.focus();}
+});
+document.addEventListener('keydown',e=>{
+  if(!document.body.classList.contains('tv'))return;
+  if(!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))return;
+  const fes=[...document.querySelectorAll('a[href],button,input,select,textarea,[tabindex]')].filter(el=>el.offsetParent!==null&&!el.disabled);
+  if(!fes.length)return;
+  let i=fes.indexOf(document.activeElement);
+  if(i===-1){fes[0].focus();e.preventDefault();return;}
+  const fwd=(e.key==='ArrowRight'||e.key==='ArrowDown');
+  i=fwd?Math.min(fes.length-1,i+1):Math.max(0,i-1);
+  fes[i].focus();e.preventDefault();
+});
+</script>
+</body>
+</html>
