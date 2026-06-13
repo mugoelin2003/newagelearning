@@ -1,0 +1,10 @@
+# Pretty URLs
+/learner       /learner.html       200
+/educator      /educator.html      200
+/institution   /institution.html   200
+/admin         /admin.html         200
+
+# API proxy → your Render backend.
+# REPLACE the host below with YOUR Render service URL (no trailing slash).
+# This makes the front end call same-origin /api, so there is no CORS to configure.
+/api/*  https://YOUR-RENDER-SERVICE.onrender.com/api/:splat  200
