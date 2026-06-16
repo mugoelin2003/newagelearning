@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Age Learning — Educator Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16142E;--ink-2:#2B2660;--violet:#4B3FBE;--violet-soft:#6E62E6;
+    --marigold:#FFA62B;--coral:#FF5C7A;--teal:#15B8A6;
+    --paper:#F7F6FC;--card:#FFFFFF;--line:#E8E5F2;--line-2:#F0EEF8;
+    --muted:#5A557A;--r:16px;--shadow:0 16px 44px -24px rgba(40,30,110,.42);--shadow-sm:0 8px 22px -16px rgba(40,30,110,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px}
+  h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;line-height:1.1}
+  button{font-family:inherit;cursor:pointer}
+  .app{display:grid;grid-template-columns:236px 1fr;min-height:100vh}
+
+  .side{background:#fff;border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:1.04rem;padding:6px 8px 6px}
+  .brand .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--violet),var(--marigold));display:grid;place-items:center;color:#fff}
+  .studio-tag{font-family:'Space Mono';font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 8px 18px 50px}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:11px;color:var(--muted);font-weight:600;font-size:.92rem;border:0;background:none;width:100%;text-align:left;transition:.14s;position:relative}
+  .nav-item:hover{background:var(--paper);color:var(--ink)}
+  .nav-item.active{background:var(--violet);color:#fff}
+  .nav-item .ic{width:20px;text-align:center;font-size:1.02rem}
+  .nav-item .ndot{position:absolute;right:12px;background:var(--coral);color:#fff;font-size:.62rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;font-family:'Space Mono'}
+  .side-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:14px}
+  .profile-chip{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:11px}
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--violet),var(--marigold));display:grid;place-items:center;color:#fff;font-weight:700;font-size:.9rem;flex-shrink:0}
+  .profile-chip .nm{font-weight:600;font-size:.86rem;display:flex;align-items:center;gap:5px}.profile-chip .rl{font-size:.72rem;color:var(--muted)}
+  .vbadge{color:var(--teal);font-size:.8rem}
+
+  .main{padding:26px 32px 60px;overflow-x:hidden;max-width:1080px}
+  .greet{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:22px;flex-wrap:wrap}
+  .greet h1{font-size:1.6rem;font-weight:800}.greet p{color:var(--muted);font-size:.9rem;margin-top:4px}
+  .btn{border:0;border-radius:11px;font-weight:600;font-size:.86rem;padding:11px 17px;cursor:pointer;transition:.14s}
+  .btn-solid{background:var(--violet);color:#fff}.btn-solid:hover{background:var(--ink-2)}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-ghost:hover{background:var(--paper)}
+  .btn-ok{background:var(--teal);color:#fff}.btn-sm{padding:7px 12px;font-size:.78rem}
+
+  .panel{display:none;animation:fade .3s ease}.panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:8px}
+  .mini{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  .mini .n{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.6rem}
+  .mini .l{color:var(--muted);font-size:.78rem;margin-top:2px}.mini .ic{font-size:1.05rem;margin-bottom:6px}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px}
+  .card + .card{margin-top:16px}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .card-head h3{font-size:1.05rem}.card-head p{color:var(--muted);font-size:.82rem;margin-top:3px}
+  .row-head{margin:24px 0 12px}.row-head h3{font-size:1.1rem}
+
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  th{text-align:left;font-family:'Space Mono';font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:0 12px 10px;border-bottom:1px solid var(--line)}
+  td{padding:13px 12px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+  tr:last-child td{border-bottom:0}
+  .st{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:7px;display:inline-block}
+  .st-draft{background:#EFEDF7;color:#6B6790}.st-pending{background:#FFF3DF;color:#B9750A}
+  .st-live{background:#E3F8F4;color:#0E8C7E}.st-rejected{background:#FFE9EE;color:#D63B5C}
+  .fmt-badges{display:flex;gap:4px}.fb{font-size:.66rem;font-weight:700;padding:3px 7px;border-radius:6px;background:var(--paper);color:var(--ink-2)}
+  .reason{font-size:.72rem;color:#D63B5C;margin-top:3px}
+  .iconbtn{border:0;background:var(--paper);width:30px;height:30px;border-radius:8px;color:var(--muted);font-size:.9rem}
+  .iconbtn:hover{background:#FFF0F3;color:var(--coral)}
+
+  .fld{margin-bottom:14px}.fld label{font-size:.78rem;font-weight:600;color:var(--ink-2);display:block;margin-bottom:6px}
+  .fld input,.fld select,.fld textarea{width:100%;font-family:inherit;font-size:.9rem;border:1px solid var(--line);border-radius:11px;padding:11px 13px;outline:none;background:#fff;color:var(--ink)}
+  .fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--violet-soft)}
+  .form-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .upload-row{display:flex;align-items:center;gap:10px;border:1px dashed var(--line);border-radius:11px;padding:11px 13px;margin-bottom:8px;background:var(--paper)}
+  .upload-row .uic{font-size:1.1rem}.upload-row .uname{flex:1;font-size:.8rem;color:var(--muted)}.upload-row .uname.has{color:var(--teal);font-weight:600}
+  .cover-prev{width:100%;height:90px;border-radius:11px;background:linear-gradient(135deg,var(--violet),var(--marigold));object-fit:cover}
+  .note{font-size:.74rem;color:var(--violet);background:#EDEBFB;padding:9px 12px;border-radius:9px;display:flex;gap:7px;align-items:flex-start;margin-top:6px}
+
+  /* availability + questions */
+  .avail-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:18px;flex-wrap:wrap}
+  .avail-bar .left{display:flex;align-items:center;gap:12px}
+  .avail-bar .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:1.2rem;background:var(--paper)}
+  .avail-bar b{font-size:.96rem}.avail-bar p{font-size:.8rem;color:var(--muted);margin-top:2px}
+  .toggle{position:relative;width:50px;height:28px;border-radius:999px;background:var(--line);border:0;transition:background .16s;flex-shrink:0}
+  .toggle.on{background:var(--teal)}
+  .toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .16s}
+  .toggle.on::after{transform:translateX(22px)}
+  .qtabs{display:flex;gap:8px;margin-bottom:16px}
+  .qtab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 16px;font-size:.85rem;font-weight:600;cursor:pointer}
+  .qtab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .qtab .cnt{font-family:'Space Mono';font-size:.66rem;background:var(--coral);color:#fff;padding:1px 6px;border-radius:6px;margin-left:6px}
+  .q{background:#fff;border:1px solid var(--line);border-radius:13px;padding:16px;margin-bottom:12px}
+  .q .qtop{display:flex;align-items:flex-start;gap:11px;margin-bottom:10px}
+  .q .qav{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--violet-soft),var(--teal));display:grid;place-items:center;color:#fff;font-weight:700;font-size:.82rem;flex-shrink:0}
+  .q .qwho{font-weight:600;font-size:.88rem}.q .qwhen{font-size:.72rem;color:var(--muted)}
+  .q .about{font-size:.72rem;color:var(--violet);background:#EDEBFB;padding:2px 9px;border-radius:6px;display:inline-block;margin-top:3px}
+  .q .qtext{font-size:.92rem;margin:4px 0 12px;line-height:1.5}
+  .q .reply{display:flex;gap:8px}
+  .q .reply input{flex:1;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:.86rem;outline:none}
+  .q .reply input:focus{border-color:var(--violet-soft)}
+  .q.answered{background:#FBFAFF;border-color:var(--teal)}
+  .q .ans{background:var(--paper);border-radius:10px;padding:11px 13px;font-size:.86rem;margin-top:8px;display:flex;gap:8px}
+  .q .ans b{color:var(--teal)}
+  .paused{text-align:center;color:var(--muted);padding:50px 20px;background:#fff;border:1px dashed var(--line);border-radius:14px}
+  .paused .e{font-size:2.2rem;margin-bottom:8px}
+
+  /* insights */
+  .ins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .ins{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  .ins h4{font-size:.92rem;margin-bottom:10px}
+  .ins .metrics{display:flex;gap:14px;flex-wrap:wrap}
+  .ins .m{font-size:.76rem;color:var(--muted)}.ins .m b{display:block;font-family:'Bricolage Grotesque';font-size:1.2rem;color:var(--ink)}
+  .ibar{height:7px;background:var(--line-2);border-radius:4px;margin-top:12px;overflow:hidden}.ibar>span{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--violet-soft))}
+
+  .type-pick{display:flex;gap:8px;flex-wrap:wrap}
+  .tag-chip{font-size:.74rem;background:var(--paper);border:1px solid var(--line);padding:5px 11px;border-radius:999px;font-weight:600}
+
+  .modal-bg{position:fixed;inset:0;background:rgba(22,20,46,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;backdrop-filter:blur(3px)}
+  .modal-bg.on{display:flex}
+  .modal{background:#fff;border-radius:18px;padding:24px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow)}
+  .modal h3{font-size:1.2rem;margin-bottom:4px}.modal .msub{color:var(--muted);font-size:.82rem;margin-bottom:18px}
+  .modal-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:500;transition:transform .3s;z-index:200;box-shadow:var(--shadow)}
+
+  @media(max-width:880px){
+    .app{grid-template-columns:1fr}
+    .side{position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;flex-direction:row;border-right:0;border-top:1px solid var(--line);padding:8px;z-index:80;justify-content:space-around;overflow-x:auto}
+    .brand,.studio-tag,.side-foot{display:none}
+    .nav-item{flex-direction:column;gap:3px;font-size:.62rem;padding:6px 6px;white-space:nowrap}
+    .nav-item .ic{font-size:1.2rem}.nav-item .ndot{position:static}
+    .nav-item.active{background:none;color:var(--violet)}
+    .main{padding:18px 16px 90px;max-width:100%}
+    .stat-strip{grid-template-columns:1fr 1fr}.form-2{grid-template-columns:1fr}
+  }  :focus-visible{outline:3px solid var(--violet-soft);outline-offset:2px;border-radius:6px}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="mark">✦</span> New Age Learning</div>
+    <div class="studio-tag">Educator Studio</div>
+    <button class="nav-item active" data-p="dash"><span class="ic">▦</span> Dashboard</button>
+    <button class="nav-item" data-p="create"><span class="ic">➕</span> Add content</button>
+    <button class="nav-item" data-p="mine"><span class="ic">📚</span> My content</button>
+    <button class="nav-item" data-p="questions"><span class="ic">💬</span> Questions <span class="ndot" id="qDot">0</span></button>
+    <button class="nav-item" data-p="insights"><span class="ic">📊</span> Insights</button>
+    <button class="nav-item" data-p="blogs"><span class="ic">✎</span> Blogs</button>
+    <button class="nav-item" data-p="profile"><span class="ic">👤</span> Profile</button>
+    <div class="side-foot">
+      <div class="profile-chip">
+        <div class="avatar">N</div>
+        <div><div class="nm">Nisha Rao <span class="vbadge" title="Verified educator">✔</span></div><div class="rl">Educator</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section class="panel on" data-panel="dash">
+      <div class="greet"><div><h1>Welcome, Nisha 👋</h1><p>Here's how your content is doing.</p></div>
+        <button class="btn btn-solid" data-p="create">+ Add content</button></div>
+      <div class="stat-strip">
+        <div class="mini"><div class="ic">🟢</div><div class="n" id="dLive">0</div><div class="l">Live</div></div>
+        <div class="mini"><div class="ic">🕓</div><div class="n" id="dPend">0</div><div class="l">Pending review</div></div>
+        <div class="mini"><div class="ic">👁</div><div class="n">14.2k</div><div class="l">Total views</div></div>
+        <div class="mini"><div class="ic">💬</div><div class="n" id="dQ">0</div><div class="l">Questions waiting</div></div>
+      </div>
+      <div class="card" style="margin-top:18px">
+        <div class="card-head"><div><h3>Recent activity</h3></div><a class="btn btn-ghost btn-sm" data-p="mine">View all content</a></div>
+        <div id="activity"></div>
+      </div>
+    </section>
+
+    <!-- CREATE -->
+    <section class="panel" data-panel="create">
+      <div class="greet"><div><h1>Add content</h1><p>Upload a book, audio or video. It goes to the admin for review before going live.</p></div></div>
+      <div class="card">
+        <div class="form-2">
+          <div class="fld"><label>Title</label><input id="cTitle" placeholder="e.g. Budgeting for Beginners"></div>
+          <div class="fld"><label>Section</label><select id="cSection"><option>Smart Money</option><option>AI</option><option>Stories</option><option>Exam prep</option><option>Future skills</option></select></div>
+          <div class="fld"><label>Age group</label><select id="cAge"><option>Ages 5–12</option><option>Grades 8–12</option><option>Professional</option><option>All ages</option></select></div>
+          <div class="fld"><label>Language</label><select id="cLang"><option>English</option><option>Hindi</option><option>Kannada</option><option>Tamil</option></select></div>
+        </div>
+        <div class="fld"><label>Description</label><textarea id="cDesc" rows="2" placeholder="A short summary learners will see."></textarea></div>
+        <div class="fld"><label>Tags <span style="color:var(--muted);font-weight:400">(comma separated)</span></label><input id="cTags" placeholder="saving, money, teens"></div>
+        <div class="fld"><label>Cover image</label><img class="cover-prev" id="cCover" alt="cover"><button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="pickImage(u=>document.getElementById('cCover').src=u,'Cover added')">Upload cover</button></div>
+        <div class="fld"><label>Content files — add any of the three formats</label>
+          <div class="upload-row"><span class="uic">📄</span><span class="uname" id="uPdf">PDF book — readable format</span><button class="btn btn-ghost btn-sm" onclick="pickFile('application/pdf',n=>setU('uPdf',n))">Upload PDF</button></div>
+          <div class="upload-row"><span class="uic">🎧</span><span class="uname" id="uAud">Audio — voice content</span><button class="btn btn-ghost btn-sm" onclick="pickFile('audio/*',n=>setU('uAud',n))">Upload audio</button></div>
+          <div class="upload-row"><span class="uic">🎬</span><span class="uname" id="uVid">Video — view content</span><button class="btn btn-ghost btn-sm" onclick="pickFile('video/*',n=>setU('uVid',n))">Upload video</button></div>
+        </div>
+        <div class="note">ℹ️ The admin sets how your content is classified (free/trial/paid) and confirms the author credit during review.</div>
+        <div class="modal-foot" style="justify-content:flex-start;margin-top:18px">
+          <button class="btn btn-solid" id="submitContent">Submit for review</button>
+          <button class="btn btn-ghost" id="saveDraft">Save as draft</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MY CONTENT -->
+    <section class="panel" data-panel="mine">
+      <div class="greet"><div><h1>My content</h1><p>Track status from draft to live.</p></div>
+        <button class="btn btn-solid" data-p="create">+ Add content</button></div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Title</th><th>Formats</th><th class="hide-sm">Section</th><th>Status</th><th></th></tr></thead>
+          <tbody id="mineBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- QUESTIONS -->
+    <section class="panel" data-panel="questions">
+      <div class="greet"><div><h1>Learner questions</h1><p>Answer specific questions about your content, or general ones.</p></div></div>
+      <div class="avail-bar">
+        <div class="left"><div class="ic" id="availIc">💬</div><div><b id="availTitle">Available for learner queries</b><p id="availSub">Learners can ask you questions and you'll get them here.</p></div></div>
+        <button class="toggle on" id="availToggle"></button>
+      </div>
+      <div id="qArea">
+        <div class="qtabs">
+          <button class="qtab on" data-q="specific">Specific <span class="cnt" id="cSpec">0</span></button>
+          <button class="qtab" data-q="general">General <span class="cnt" id="cGen">0</span></button>
+        </div>
+        <div id="qList"></div>
+      </div>
+      <div class="paused" id="pausedBox" style="display:none">
+        <div class="e">🔕</div>You're not available for queries right now. Learners won't be routed to you.<br>Flip the toggle above to start receiving questions again.
+      </div>
+    </section>
+
+    <!-- INSIGHTS -->
+    <section class="panel" data-panel="insights">
+      <div class="greet"><div><h1>Insights</h1><p>How learners engage with your content.</p></div></div>
+      <div class="ins-grid" id="insGrid"></div>
+    </section>
+
+    <!-- BLOGS -->
+    <section class="panel" data-panel="blogs">
+      <div class="greet"><div><h1>My blogs</h1><p>Write articles — reviewed before they're published.</p></div>
+        <button class="btn btn-solid" id="addBlog">+ New blog</button></div>
+      <div class="card"><div id="blogList"></div></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="panel" data-panel="profile">
+      <div class="greet"><div><h1>Educator profile</h1><p>What learners see on your author page.</p></div></div>
+      <div class="card">
+        <div class="form-2">
+          <div class="fld"><label>Name</label><input id="pName" value="Nisha Rao"></div>
+          <div class="fld"><label>Headline</label><input id="pHead" value="Financial literacy educator"></div>
+        </div>
+        <div class="fld"><label>Bio</label><textarea id="pBio" rows="3">I help young Indians build smart money habits early, through simple stories and hands-on lessons.</textarea></div>
+        <div class="fld"><label>Subjects you teach</label>
+          <div class="type-pick"><span class="tag-chip">Smart Money</span><span class="tag-chip">Financial literacy</span><span class="tag-chip">+ Add</span></div>
+        </div>
+        <button class="btn btn-solid" id="saveProfile" style="margin-top:6px">Save profile</button>
+      </div>
+      <div class="avail-bar" style="margin-top:16px">
+        <div class="left"><div class="ic">💬</div><div><b>Available for learner queries</b><p>Same toggle as the Questions tab — turn it on to answer learners.</p></div></div>
+        <button class="toggle on" id="availToggle2"></button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* nav */
+const navItems=[...document.querySelectorAll('.nav-item')],panels=[...document.querySelectorAll('.panel')];
+function go(p){navItems.forEach(n=>n.classList.toggle('active',n.dataset.p===p));panels.forEach(pl=>pl.classList.toggle('on',pl.dataset.panel===p));window.scrollTo(0,0);}
+document.querySelectorAll('[data-p]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.p)));
+
+/* toast + uploads */
+let tT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.transform='translateX(-50%) translateY(0)';clearTimeout(tT);tT=setTimeout(()=>t.style.transform='translateX(-50%) translateY(90px)',2400);}
+function pickFile(accept,cb){const i=document.createElement('input');i.type='file';i.accept=accept;i.onchange=()=>{if(i.files[0])cb(i.files[0].name);};i.click();}
+function pickImage(cb,m){const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=()=>{if(i.files[0]){cb(URL.createObjectURL(i.files[0]));toast(m||'Image uploaded');}};i.click();}
+function setU(id,n){const e=document.getElementById(id);e.textContent=n;e.classList.add('has');}
+
+/* content */
+let mine=[
+  {title:'Money Sense Basics',fmts:['PDF','Audio'],section:'Smart Money',status:'live'},
+  {title:'Saving as a Superpower',fmts:['Video'],section:'Smart Money',status:'pending'},
+  {title:'Budget Like a Pro',fmts:['PDF'],section:'Smart Money',status:'rejected',reason:'Please add age group and a cover image.'},
+  {title:'Compound Interest Explained',fmts:['PDF','Video'],section:'Smart Money',status:'draft'},
+];
+const ST={draft:['Draft','st-draft'],pending:['Pending review','st-pending'],live:['Live','st-live'],rejected:['Rejected','st-rejected']};
+function renderMine(){
+  const b=document.getElementById('mineBody');b.innerHTML='';
+  mine.forEach((m,i)=>{
+    const s=ST[m.status];
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><b>${m.title}</b>${m.status==='rejected'?`<div class="reason">⚠ ${m.reason}</div>`:''}</td>
+      <td><div class="fmt-badges">${m.fmts.map(f=>`<span class="fb">${f}</span>`).join('')}</div></td>
+      <td class="hide-sm">${m.section}</td>
+      <td><span class="st ${s[1]}">${s[0]}</span></td>
+      <td style="text-align:right" id="act${i}"></td>`;
+    b.appendChild(tr);
+    const act=tr.querySelector('#act'+i);
+    if(m.status==='draft')act.appendChild(btn('Submit','btn-solid btn-sm',()=>{m.status='pending';toast('Submitted for review');refresh();}));
+    if(m.status==='rejected')act.appendChild(btn('Fix & resubmit','btn-ok btn-sm',()=>{m.status='pending';toast('Resubmitted for review');refresh();}));
+    if(m.status==='live')act.appendChild(btn('Take down','btn-ghost btn-sm',()=>{m.status='draft';toast('Taken down — back to draft');refresh();}));
+    const del=document.createElement('button');del.className='iconbtn';del.style.marginLeft='6px';del.textContent='✕';del.onclick=()=>{mine.splice(i,1);refresh();};act.appendChild(del);
+  });
+}
+function btn(label,cls,fn){const b=document.createElement('button');b.className='btn '+cls;b.textContent=label;b.onclick=fn;return b;}
+
+document.getElementById('submitContent').addEventListener('click',()=>addContent('pending','Submitted for review 🎉'));
+document.getElementById('saveDraft').addEventListener('click',()=>addContent('draft','Saved as draft'));
+function addContent(status,msg){
+  const t=document.getElementById('cTitle').value.trim();if(!t){toast('Add a title first');return;}
+  const fmts=[];if(document.getElementById('uPdf').classList.contains('has'))fmts.push('PDF');if(document.getElementById('uAud').classList.contains('has'))fmts.push('Audio');if(document.getElementById('uVid').classList.contains('has'))fmts.push('Video');
+  mine.unshift({title:t,fmts:fmts.length?fmts:['PDF'],section:document.getElementById('cSection').value,status});
+  ['cTitle','cDesc','cTags'].forEach(id=>document.getElementById(id).value='');
+  ['uPdf','uAud','uVid'].forEach(id=>{const e=document.getElementById(id);e.classList.remove('has');});
+  document.getElementById('uPdf').textContent='PDF book — readable format';document.getElementById('uAud').textContent='Audio — voice content';document.getElementById('uVid').textContent='Video — view content';
+  toast(msg);refresh();go('mine');
+}
+
+/* dashboard */
+function renderDash(){
+  document.getElementById('dLive').textContent=mine.filter(m=>m.status==='live').length;
+  document.getElementById('dPend').textContent=mine.filter(m=>m.status==='pending').length;
+  const act=document.getElementById('activity');
+  act.innerHTML=mine.slice(0,4).map(m=>{const s=ST[m.status];return `<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line-2)"><b style="font-weight:600">${m.title}</b><span class="st ${s[1]}">${s[0]}</span></div>`;}).join('');
+}
+
+/* questions + availability */
+let available=true;
+let questions=[
+  {kind:'specific',who:'Aarav (Student)',about:'Money Sense Basics',text:'In chapter 2, how is compound interest different from simple interest?',when:'1h',ans:null},
+  {kind:'specific',who:'Diya (Young Explorer)',about:'Saving as a Superpower',text:'How much should I try to save from my pocket money?',when:'3h',ans:null},
+  {kind:'general',who:'Rohan (Professional)',about:null,text:'Do you have anything on investing for first-time earners?',when:'5h',ans:null},
+  {kind:'general',who:'Meera (Student)',about:null,text:'Which of your books should I start with?',when:'1d',ans:'Start with “Money Sense Basics”, then move to the saving guide!'},
+];
+let qTab='specific';
+function setAvailable(v){
+  available=v;
+  document.getElementById('availToggle').classList.toggle('on',v);
+  document.getElementById('availToggle2').classList.toggle('on',v);
+  document.getElementById('availTitle').textContent=v?'Available for learner queries':'Not available for queries';
+  document.getElementById('availSub').textContent=v?'Learners can ask you questions and you\'ll get them here.':'Queries are paused — learners won\'t be routed to you.';
+  document.getElementById('availIc').textContent=v?'💬':'🔕';
+  document.getElementById('qArea').style.display=v?'block':'none';
+  document.getElementById('pausedBox').style.display=v?'none':'block';
+  renderQ();updateQDot();
+}
+document.getElementById('availToggle').addEventListener('click',()=>setAvailable(!available));
+document.getElementById('availToggle2').addEventListener('click',()=>setAvailable(!available));
+document.querySelectorAll('.qtab').forEach(t=>t.addEventListener('click',()=>{qTab=t.dataset.q;document.querySelectorAll('.qtab').forEach(x=>x.classList.toggle('on',x===t));renderQ();}));
+function renderQ(){
+  const list=questions.filter(q=>q.kind===qTab);
+  const el=document.getElementById('qList');
+  el.innerHTML=list.length?list.map((q,i)=>{
+    const idx=questions.indexOf(q);
+    return `<div class="q ${q.ans?'answered':''}">
+      <div class="qtop"><div class="qav">${q.who[0]}</div>
+        <div style="flex:1"><div class="qwho">${q.who}</div>${q.about?`<span class="about">about: ${q.about}</span>`:'<span class="qwhen">general question</span>'}</div>
+        <span class="qwhen">${q.when}</span></div>
+      <div class="qtext">${q.text}</div>
+      ${q.ans?`<div class="ans"><b>You:</b> <span>${q.ans}</span></div>`
+        :`<div class="reply"><input id="r${idx}" placeholder="Write a reply…"><button class="btn btn-solid btn-sm" onclick="sendReply(${idx})">Reply</button></div>`}
+    </div>`;}).join(''):'<p style="color:var(--muted);padding:16px">No '+qTab+' questions right now.</p>';
+  document.getElementById('cSpec').textContent=questions.filter(q=>q.kind==='specific'&&!q.ans).length;
+  document.getElementById('cGen').textContent=questions.filter(q=>q.kind==='general'&&!q.ans).length;
+}
+function sendReply(idx){const inp=document.getElementById('r'+idx);const v=inp.value.trim();if(!v){toast('Write a reply first');return;}questions[idx].ans=v;toast('Reply sent to learner');renderQ();updateQDot();renderDash();}
+function updateQDot(){const n=available?questions.filter(q=>!q.ans).length:0;const d=document.getElementById('qDot');d.style.display=n?'grid':'none';d.textContent=n;document.getElementById('dQ').textContent=n;}
+
+/* insights */
+const insData=[
+  {t:'Money Sense Basics',views:8200,reads:5100,listens:2300,done:64},
+  {t:'Saving as a Superpower',views:3400,reads:0,watches:2900,done:48},
+  {t:'Budget Like a Pro',views:2600,reads:2600,done:71},
+];
+document.getElementById('insGrid').innerHTML=insData.map(d=>`
+  <div class="ins"><h4>${d.t}</h4>
+    <div class="metrics"><div class="m"><b>${(d.views/1000).toFixed(1)}k</b>views</div>
+      ${d.reads?`<div class="m"><b>${(d.reads/1000).toFixed(1)}k</b>reads</div>`:''}
+      ${d.listens?`<div class="m"><b>${(d.listens/1000).toFixed(1)}k</b>listens</div>`:''}
+      ${d.watches?`<div class="m"><b>${(d.watches/1000).toFixed(1)}k</b>watches</div>`:''}</div>
+    <div class="ibar"><span style="width:${d.done}%"></span></div>
+    <div class="m" style="margin-top:6px">${d.done}% completion</div></div>`).join('');
+
+/* blogs */
+let blogs=[{t:'Why money lessons should start early',st:'Published'},{t:'Teaching teens to budget',st:'Pending review'}];
+function renderBlogs(){document.getElementById('blogList').innerHTML=blogs.map((b,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line-2)"><b style="font-weight:600">${b.t}</b><span class="st ${b.st==='Published'?'st-live':'st-pending'}">${b.st}</span></div>`).join('');}
+document.getElementById('addBlog').addEventListener('click',()=>{const t=prompt('Blog title:');if(t){blogs.unshift({t,st:'Pending review'});renderBlogs();toast('Blog submitted for review');}});
+
+/* profile */
+document.getElementById('saveProfile').addEventListener('click',()=>toast('Profile saved'));
+
+function refresh(){renderMine();renderDash();}
+refresh();renderQ();updateQDot();renderBlogs();
+</script>
+</body>
+</html>

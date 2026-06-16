@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Age Learning — Institution Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16142E;--ink-2:#2B2660;--violet:#4B3FBE;--violet-soft:#6E62E6;
+    --marigold:#FFA62B;--coral:#FF5C7A;--teal:#15B8A6;
+    --paper:#F7F6FC;--card:#FFFFFF;--line:#E8E5F2;--line-2:#F0EEF8;
+    --muted:#5A557A;--r:16px;--shadow:0 16px 44px -24px rgba(40,30,110,.42);--shadow-sm:0 8px 22px -16px rgba(40,30,110,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:14px}
+  h1,h2,h3,h4{font-family:'Bricolage Grotesque',sans-serif;letter-spacing:-.02em;line-height:1.1}
+  button{font-family:inherit;cursor:pointer}
+  .app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+
+  .side{background:#fff;border-right:1px solid var(--line);padding:20px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Bricolage Grotesque';font-weight:800;font-size:1.02rem;padding:6px 8px 4px}
+  .brand .mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--violet),var(--teal));display:grid;place-items:center;color:#fff}
+  .studio-tag{font-family:'Space Mono';font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:0 8px 18px 50px}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:11px;color:var(--muted);font-weight:600;font-size:.91rem;border:0;background:none;width:100%;text-align:left;transition:.14s}
+  .nav-item:hover{background:var(--paper);color:var(--ink)}
+  .nav-item.active{background:var(--violet);color:#fff}
+  .nav-item .ic{width:20px;text-align:center;font-size:1.02rem}
+  .side-foot{margin-top:auto;border-top:1px solid var(--line);padding-top:14px}
+  .seatbox{padding:10px 12px;background:var(--paper);border-radius:11px}
+  .seatbox .top{display:flex;justify-content:space-between;font-size:.78rem;font-weight:600;margin-bottom:7px}
+  .seatbar{height:7px;background:var(--line);border-radius:4px;overflow:hidden}.seatbar>span{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--violet-soft))}
+  .seatbox .sub{font-size:.7rem;color:var(--muted);margin-top:6px}
+
+  .main{padding:26px 32px 60px;overflow-x:hidden;max-width:1100px}
+  .greet{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:22px;flex-wrap:wrap}
+  .greet h1{font-size:1.6rem;font-weight:800}.greet p{color:var(--muted);font-size:.9rem;margin-top:4px}
+  .btn{border:0;border-radius:11px;font-weight:600;font-size:.86rem;padding:11px 17px;cursor:pointer;transition:.14s}
+  .btn-solid{background:var(--violet);color:#fff}.btn-solid:hover{background:var(--ink-2)}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-ghost:hover{background:var(--paper)}
+  .btn-ok{background:var(--teal);color:#fff}.btn-sm{padding:7px 12px;font-size:.78rem}
+
+  .panel{display:none;animation:fade .3s ease}.panel.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+  .mini{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+  .mini .n{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.6rem}
+  .mini .l{color:var(--muted);font-size:.78rem;margin-top:2px}.mini .ic{font-size:1.05rem;margin-bottom:6px}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:20px}
+  .card + .card{margin-top:16px}
+  .card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .card-head h3{font-size:1.05rem}.card-head p{color:var(--muted);font-size:.82rem;margin-top:3px}
+
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  th{text-align:left;font-family:'Space Mono';font-size:.66rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);padding:0 12px 10px;border-bottom:1px solid var(--line)}
+  td{padding:12px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+  tr:last-child td{border-bottom:0}
+  .avatar-sm{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--violet-soft),var(--teal));display:inline-grid;place-items:center;color:#fff;font-weight:700;font-size:.74rem;margin-right:9px;vertical-align:middle}
+  .st{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:7px;display:inline-block}
+  .st-active{background:#E3F8F4;color:#0E8C7E}.st-inactive{background:#EFEDF7;color:#647089}
+  .st-behind{background:#FFE9EE;color:#D63B5C}.st-ontrack{background:#E3F8F4;color:#0E8C7E}
+  .iconbtn{border:0;background:var(--paper);width:30px;height:30px;border-radius:8px;color:var(--muted);font-size:.9rem}
+  .iconbtn:hover{background:#FFF0F3;color:var(--coral)}
+
+  .tabs{display:flex;gap:8px;margin-bottom:16px}
+  .tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 16px;font-size:.85rem;font-weight:600;cursor:pointer}
+  .tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .bar{height:7px;background:var(--line-2);border-radius:4px;overflow:hidden;min-width:90px}.bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--violet-soft))}
+  .invite{display:flex;align-items:center;gap:10px;background:var(--paper);border:1px dashed var(--line);border-radius:11px;padding:11px 14px}
+  .invite code{font-family:'Space Mono';font-weight:700;color:var(--violet);letter-spacing:.05em}
+
+  .class-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .class-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+  .class-card h4{font-size:1rem}.class-card .meta{font-size:.78rem;color:var(--muted);margin:4px 0 12px}
+  .class-card .who{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--ink-2);font-weight:600}
+
+  .assign-row{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px;margin-bottom:10px;flex-wrap:wrap}
+  .assign-row .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:1.2rem;color:#fff;flex-shrink:0}
+  .assign-row .info{flex:1;min-width:150px}.assign-row .info b{font-size:.92rem}.assign-row .info .sub{font-size:.76rem;color:var(--muted)}
+  .req{font-size:.66rem;font-weight:700;padding:3px 8px;border-radius:6px;background:#EDEBFB;color:var(--violet)}
+  .opt{background:var(--paper);color:var(--muted)}
+
+  .report-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line-2)}
+  .report-row .lbl{width:120px;font-weight:600;font-size:.88rem}
+  .report-row .num{width:48px;text-align:right;font-family:'Space Mono';font-size:.82rem;color:var(--muted)}
+
+  /* content controls */
+  .grade-row{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px 16px;margin-bottom:10px;flex-wrap:wrap}
+  .grade-row .gname{font-weight:700;width:110px}
+  .age-chips{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+  .age-chip{font-size:.74rem;font-weight:600;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
+  .age-chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .toggle{position:relative;width:42px;height:24px;border-radius:999px;background:var(--line);border:0;transition:.16s;flex-shrink:0}
+  .toggle.on{background:var(--violet)}
+  .toggle::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .16s}.toggle.on::after{transform:translateX(18px)}
+  .toggle-wrap{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--muted)}
+  .consent{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:6px}
+  .consent.ok{background:#E3F8F4;color:#0E8C7E}.consent.pend{background:#FFF3DF;color:#B9750A}
+  .safety-note{font-size:.76rem;color:var(--violet);background:#EDEBFB;padding:10px 13px;border-radius:10px;display:flex;gap:8px;margin-bottom:16px}
+
+  .fld{margin-bottom:13px}.fld label{font-size:.78rem;font-weight:600;color:var(--ink-2);display:block;margin-bottom:6px}
+  .fld input,.fld select{width:100%;font-family:inherit;font-size:.9rem;border:1px solid var(--line);border-radius:11px;padding:11px 13px;outline:none;background:#fff;color:var(--ink)}
+  .fld input:focus,.fld select:focus{border-color:var(--violet-soft)}
+  .modal-bg{position:fixed;inset:0;background:rgba(22,28,46,.5);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;backdrop-filter:blur(3px)}
+  .modal-bg.on{display:flex}
+  .modal{background:#fff;border-radius:18px;padding:24px;width:100%;max-width:460px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow)}
+  .modal h3{font-size:1.2rem;margin-bottom:4px}.modal .msub{color:var(--muted);font-size:.82rem;margin-bottom:18px}
+  .modal-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:14px}
+
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(90px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:12px;font-size:.85rem;font-weight:500;transition:transform .3s;z-index:200;box-shadow:var(--shadow)}
+
+  @media(max-width:880px){
+    .app{grid-template-columns:1fr}
+    .side{position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;flex-direction:row;border-right:0;border-top:1px solid var(--line);padding:8px;z-index:80;justify-content:space-around;overflow-x:auto}
+    .brand,.studio-tag,.side-foot{display:none}
+    .nav-item{flex-direction:column;gap:3px;font-size:.6rem;padding:6px 5px;white-space:nowrap}
+    .nav-item .ic{font-size:1.2rem}.nav-item.active{background:none;color:var(--violet)}
+    .main{padding:18px 16px 90px;max-width:100%}
+    .stat-strip{grid-template-columns:1fr 1fr}
+  }  :focus-visible{outline:3px solid var(--violet-soft);outline-offset:2px;border-radius:6px}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><span class="mark">✦</span> New Age Learning</div>
+    <div class="studio-tag">Institution Console</div>
+    <button class="nav-item active" data-p="dash"><span class="ic">▦</span> Dashboard</button>
+    <button class="nav-item" data-p="members"><span class="ic">👥</span> Members</button>
+    <button class="nav-item" data-p="classes"><span class="ic">🏫</span> Classes</button>
+    <button class="nav-item" data-p="assign"><span class="ic">📦</span> Assignments</button>
+    <button class="nav-item" data-p="reports"><span class="ic">📊</span> Reports</button>
+    <button class="nav-item" data-p="controls"><span class="ic">🛡️</span> Access controls</button>
+    <button class="nav-item" data-p="settings"><span class="ic">⚙️</span> Settings</button>
+    <div class="side-foot">
+      <div class="seatbox">
+        <div class="top"><span>Seats</span><span id="seatTxt">0 / 300</span></div>
+        <div class="seatbar"><span id="seatFill" style="width:0%"></span></div>
+        <div class="sub">Greenfield Public School</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section class="panel on" data-panel="dash">
+      <div class="greet"><div><h1>Greenfield Public School</h1><p>Your learners, classes and outcomes at a glance.</p></div>
+        <button class="btn btn-solid" data-p="members">+ Add students</button></div>
+      <div class="stat-strip">
+        <div class="mini"><div class="ic">👩‍🎓</div><div class="n" id="dStudents">0</div><div class="l">Students</div></div>
+        <div class="mini"><div class="ic">👩‍🏫</div><div class="n" id="dTeachers">0</div><div class="l">Teachers</div></div>
+        <div class="mini"><div class="ic">🏫</div><div class="n" id="dClasses">0</div><div class="l">Classes</div></div>
+        <div class="mini"><div class="ic">✅</div><div class="n">68%</div><div class="l">Avg completion</div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h3>Students needing attention</h3><p>Falling behind on assigned content.</p></div><a class="btn btn-ghost btn-sm" data-p="reports">Full reports</a></div>
+        <div id="attention"></div>
+      </div>
+    </section>
+
+    <!-- MEMBERS -->
+    <section class="panel" data-panel="members">
+      <div class="greet"><div><h1>Members</h1><p>Students and teachers in your institution.</p></div></div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-head"><div><h3>Add people fast</h3><p>Share a join code, or import a list.</p></div></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div class="invite" style="flex:1;min-width:220px">Join code: <code>GREEN-7K2</code><button class="btn btn-ghost btn-sm" onclick="toast('Join code copied')">Copy</button></div>
+          <button class="btn btn-ghost" onclick="pickFile('.csv',n=>toast('Imported students from '+n))">⬆ Import CSV</button>
+          <button class="btn btn-solid" id="addPerson">+ Add one</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="tabs"><button class="tab on" data-t="students">Students</button><button class="tab" data-t="teachers">Teachers</button></div>
+        <table><thead id="memHead"></thead><tbody id="memBody"></tbody></table>
+      </div>
+    </section>
+
+    <!-- CLASSES -->
+    <section class="panel" data-panel="classes">
+      <div class="greet"><div><h1>Classes</h1><p>Group students and assign a teacher.</p></div>
+        <button class="btn btn-solid" id="addClass">+ New class</button></div>
+      <div class="class-grid" id="classGrid"></div>
+    </section>
+
+    <!-- ASSIGNMENTS -->
+    <section class="panel" data-panel="assign">
+      <div class="greet"><div><h1>Assignments</h1><p>Assign library content to a class, track completion.</p></div>
+        <button class="btn btn-solid" id="addAssign">+ Assign content</button></div>
+      <div id="assignList"></div>
+    </section>
+
+    <!-- REPORTS -->
+    <section class="panel" data-panel="reports">
+      <div class="greet"><div><h1>Reports</h1><p>Engagement and completion across the school.</p></div>
+        <button class="btn btn-ghost" onclick="toast('Report exported (demo)')">⬇ Export</button></div>
+      <div class="card">
+        <div class="card-head"><div><h3>Completion by class</h3></div></div>
+        <div id="classReport"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div><h3>Most engaged subjects</h3></div></div>
+        <div id="subjReport"></div>
+      </div>
+    </section>
+
+    <!-- ACCESS CONTROLS -->
+    <section class="panel" data-panel="controls">
+      <div class="greet"><div><h1>Access controls</h1><p>Keep content age-appropriate for every grade.</p></div></div>
+      <div class="safety-note">🛡️ Set which content age-bands each grade can see. Younger grades require parental consent on file before content is shown.</div>
+      <div id="gradeControls"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="panel" data-panel="settings">
+      <div class="greet"><div><h1>Settings</h1><p>Institution details.</p></div></div>
+      <div class="card" style="max-width:540px">
+        <div class="fld"><label>Institution name</label><input value="Greenfield Public School"></div>
+        <div class="fld"><label>Type</label><select><option>School (K–12)</option><option>Coaching / Institute</option><option>University</option></select></div>
+        <div class="fld"><label>City</label><input value="Bengaluru"></div>
+        <div class="fld"><label>Primary contact</label><input value="principal@greenfield.edu"></div>
+        <button class="btn btn-ghost btn-sm" onclick="pickImage(()=>{},'Logo uploaded')">Upload logo</button>
+        <button class="btn btn-solid" style="margin-left:8px" onclick="toast('Settings saved')">Save</button>
+        <div class="safety-note" style="margin-top:18px">💳 Seat licensing & invoices appear here once billing is switched on — currently managed by the New Age Learning admin.</div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ADD PERSON MODAL -->
+<div class="modal-bg" id="personModal">
+  <div class="modal">
+    <h3>Add a member</h3><div class="msub">They'll get an invite to join your institution.</div>
+    <div class="fld"><label>Name</label><input id="pmName" placeholder="Full name"></div>
+    <div class="fld"><label>Role</label><select id="pmRole"><option value="student">Student</option><option value="teacher">Teacher</option></select></div>
+    <div class="fld" id="pmClassFld"><label>Class</label><select id="pmClass"></select></div>
+    <div class="modal-foot"><button class="btn btn-ghost" id="pmCancel">Cancel</button><button class="btn btn-solid" id="pmSave">Add member</button></div>
+  </div>
+</div>
+
+<!-- ASSIGN MODAL -->
+<div class="modal-bg" id="assignModal">
+  <div class="modal">
+    <h3>Assign content</h3><div class="msub">Pick content from the library and a class to assign it to.</div>
+    <div class="fld"><label>Content</label><select id="amContent"></select></div>
+    <div class="fld"><label>Assign to class</label><select id="amClass"></select></div>
+    <div class="fld"><label>Due date</label><input id="amDue" placeholder="e.g. 30 Jun" ></div>
+    <div class="toggle-wrap" style="margin:4px 0 6px">Required <button class="toggle on" id="amReq"></button></div>
+    <div class="modal-foot"><button class="btn btn-ghost" id="amCancel">Cancel</button><button class="btn btn-solid" id="amSave">Assign</button></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const TOTAL_SEATS=300;
+/* nav */
+const navItems=[...document.querySelectorAll('.nav-item')],panels=[...document.querySelectorAll('.panel')];
+function go(p){navItems.forEach(n=>n.classList.toggle('active',n.dataset.p===p));panels.forEach(pl=>pl.classList.toggle('on',pl.dataset.panel===p));window.scrollTo(0,0);}
+document.querySelectorAll('[data-p]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.p)));
+let tT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.transform='translateX(-50%) translateY(0)';clearTimeout(tT);tT=setTimeout(()=>t.style.transform='translateX(-50%) translateY(90px)',2400);}
+function pickFile(accept,cb){const i=document.createElement('input');i.type='file';i.accept=accept;i.onchange=()=>{if(i.files[0])cb(i.files[0].name);};i.click();}
+function pickImage(cb,m){const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=()=>{if(i.files[0]){cb(URL.createObjectURL(i.files[0]));toast(m||'Uploaded');}};i.click();}
+
+/* data */
+let students=[
+  {name:'Aarav Mehta',cls:'Class 8A',active:true,prog:82,behind:false},
+  {name:'Diya Sharma',cls:'Class 8A',active:true,prog:34,behind:true},
+  {name:'Kabir Singh',cls:'Class 9B',active:true,prog:91,behind:false},
+  {name:'Ananya Rao',cls:'Class 9B',active:true,prog:28,behind:true},
+  {name:'Vivaan Gupta',cls:'Class 6A',active:false,prog:0,behind:false},
+];
+let teachers=[
+  {name:'Mrs. Kavya Nair',subj:'Mathematics',cls:'Class 8A'},
+  {name:'Mr. Arjun Das',subj:'Science',cls:'Class 9B'},
+];
+let classes=[
+  {name:'Class 6A',grade:'Grade 6',teacher:'—',count:1},
+  {name:'Class 8A',grade:'Grade 8',teacher:'Mrs. Kavya Nair',count:2},
+  {name:'Class 9B',grade:'Grade 9',teacher:'Mr. Arjun Das',count:2},
+];
+let assignments=[
+  {title:'Smart Money for Teens',cls:'Class 8A',due:'30 Jun',req:true,done:62,g:'g2',cv:'💡'},
+  {title:'AI for Curious Kids',cls:'Class 6A',due:'5 Jul',req:false,done:40,g:'g1',cv:'🤖'},
+];
+const library=['Smart Money for Teens','AI for Curious Kids','Future Skills Playbook','Stories of Young India','Crack Your Exams','Investing Basics'];
+let grades=[
+  {g:'Grade 6',ages:['Ages 5–12'],restrict:true,consent:'ok'},
+  {g:'Grade 8',ages:['Ages 5–12','Grades 8–12'],restrict:true,consent:'ok'},
+  {g:'Grade 9',ages:['Grades 8–12'],restrict:false,consent:'pend'},
+  {g:'Grade 11',ages:['Grades 8–12','Professional'],restrict:false,consent:'ok'},
+];
+const AGE_BANDS=['Ages 5–12','Grades 8–12','Professional'];
+
+/* seats + dashboard */
+function refreshSeats(){
+  const used=students.length;
+  document.getElementById('seatTxt').textContent=used+' / '+TOTAL_SEATS;
+  document.getElementById('seatFill').style.width=(used/TOTAL_SEATS*100)+'%';
+  document.getElementById('dStudents').textContent=used;
+  document.getElementById('dTeachers').textContent=teachers.length;
+  document.getElementById('dClasses').textContent=classes.length;
+}
+function renderAttention(){
+  const behind=students.filter(s=>s.behind&&s.active);
+  document.getElementById('attention').innerHTML=behind.length?behind.map(s=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line-2)">
+      <span class="avatar-sm">${s.name[0]}</span><b style="flex:1;font-weight:600">${s.name}</b>
+      <span style="font-size:.78rem;color:var(--muted)">${s.cls}</span>
+      <div class="bar" style="width:90px"><span style="width:${s.prog}%"></span></div>
+      <span class="st st-behind">${s.prog}% behind</span></div>`).join('')
+    :'<p style="color:var(--muted)">Everyone is on track. 🎉</p>';
+}
+
+/* members */
+let memTab='students';
+document.querySelectorAll('[data-t]').forEach(t=>t.addEventListener('click',()=>{memTab=t.dataset.t;document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===t));renderMembers();}));
+function renderMembers(){
+  const head=document.getElementById('memHead'),body=document.getElementById('memBody');
+  if(memTab==='students'){
+    head.innerHTML='<tr><th>Student</th><th>Class</th><th>Progress</th><th>Status</th><th></th></tr>';
+    body.innerHTML='';
+    students.forEach((s,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td><span class="avatar-sm">${s.name[0]}</span>${s.name}</td><td>${s.cls}</td>
+        <td><div class="bar"><span style="width:${s.prog}%"></span></div></td>
+        <td><span class="st ${s.active?'st-active':'st-inactive'}">${s.active?'Active':'Inactive'}</span></td>
+        <td style="text-align:right"></td>`;
+      const td=tr.lastElementChild;
+      const tog=document.createElement('button');tog.className='btn btn-ghost btn-sm';tog.textContent=s.active?'Deactivate':'Activate';tog.onclick=()=>{s.active=!s.active;refresh();};
+      const del=document.createElement('button');del.className='iconbtn';del.style.marginLeft='6px';del.textContent='✕';del.onclick=()=>{students.splice(i,1);refresh();};
+      td.append(tog,del);body.appendChild(tr);
+    });
+  } else {
+    head.innerHTML='<tr><th>Teacher</th><th>Subject</th><th>Class</th><th></th></tr>';
+    body.innerHTML='';
+    teachers.forEach((t,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td><span class="avatar-sm">${t.name.replace(/^(Mrs?\.?|Mr\.?)\s*/,'')[0]}</span>${t.name}</td><td>${t.subj}</td><td>${t.cls}</td><td style="text-align:right"></td>`;
+      const del=document.createElement('button');del.className='iconbtn';del.textContent='✕';del.onclick=()=>{teachers.splice(i,1);refresh();};
+      tr.lastElementChild.appendChild(del);body.appendChild(tr);
+    });
+  }
+}
+
+/* add person modal */
+const personModal=document.getElementById('personModal');
+document.getElementById('addPerson').addEventListener('click',()=>{fillClassSelect('pmClass');personModal.classList.add('on');});
+document.getElementById('pmRole').addEventListener('change',e=>{document.getElementById('pmClassFld').style.display=e.target.value==='student'?'block':'none';});
+document.getElementById('pmCancel').addEventListener('click',()=>personModal.classList.remove('on'));
+personModal.addEventListener('click',e=>{if(e.target===personModal)personModal.classList.remove('on');});
+document.getElementById('pmSave').addEventListener('click',()=>{
+  const name=document.getElementById('pmName').value.trim();if(!name){toast('Enter a name');return;}
+  if(document.getElementById('pmRole').value==='student'){
+    if(students.length>=TOTAL_SEATS){toast('No seats left');return;}
+    const cls=document.getElementById('pmClass').value;
+    students.unshift({name,cls,active:true,prog:0,behind:false});
+    const c=classes.find(c=>c.name===cls);if(c)c.count++;
+  } else teachers.unshift({name,subj:'—',cls:'—'});
+  document.getElementById('pmName').value='';personModal.classList.remove('on');toast(name+' added');refresh();
+});
+
+/* classes */
+function fillClassSelect(id){document.getElementById(id).innerHTML=classes.map(c=>`<option>${c.name}</option>`).join('');}
+function renderClasses(){
+  document.getElementById('classGrid').innerHTML=classes.map(c=>`
+    <div class="class-card"><h4>${c.name}</h4><div class="meta">${c.grade} · ${c.count} students</div>
+      <div class="who">👩‍🏫 ${c.teacher}</div></div>`).join('');
+}
+document.getElementById('addClass').addEventListener('click',()=>{const n=prompt('Class name (e.g. Class 10A):');if(n){classes.push({name:n,grade:'—',teacher:'—',count:0});refresh();toast('Class created');}});
+
+/* assignments */
+function renderAssign(){
+  document.getElementById('assignList').innerHTML=assignments.map(a=>`
+    <div class="assign-row"><div class="ic ${a.g}">${a.cv}</div>
+      <div class="info"><b>${a.title}</b><div class="sub">${a.cls} · due ${a.due}</div></div>
+      <span class="req ${a.req?'':'opt'}">${a.req?'Required':'Optional'}</span>
+      <div style="text-align:right;min-width:120px"><div class="bar" style="margin-bottom:4px"><span style="width:${a.done}%"></span></div>
+        <span style="font-size:.72rem;color:var(--muted)">${a.done}% completed</span></div></div>`).join('')
+    ||'<p style="color:var(--muted)">No assignments yet.</p>';
+}
+const assignModal=document.getElementById('assignModal');
+document.getElementById('addAssign').addEventListener('click',()=>{
+  document.getElementById('amContent').innerHTML=library.map(t=>`<option>${t}</option>`).join('');
+  fillClassSelect('amClass');assignModal.classList.add('on');
+});
+document.getElementById('amReq').addEventListener('click',()=>document.getElementById('amReq').classList.toggle('on'));
+document.getElementById('amCancel').addEventListener('click',()=>assignModal.classList.remove('on'));
+assignModal.addEventListener('click',e=>{if(e.target===assignModal)assignModal.classList.remove('on');});
+document.getElementById('amSave').addEventListener('click',()=>{
+  assignments.unshift({title:document.getElementById('amContent').value,cls:document.getElementById('amClass').value,
+    due:document.getElementById('amDue').value.trim()||'TBD',req:document.getElementById('amReq').classList.contains('on'),done:0,g:'g3',cv:'📦'});
+  assignModal.classList.remove('on');toast('Content assigned');renderAssign();
+});
+
+/* reports */
+function renderReports(){
+  const byClass=classes.filter(c=>c.count>0).map(c=>{
+    const ss=students.filter(s=>s.cls===c.name&&s.active);
+    const avg=ss.length?Math.round(ss.reduce((a,s)=>a+s.prog,0)/ss.length):0;return {name:c.name,avg};
+  });
+  document.getElementById('classReport').innerHTML=byClass.map(c=>`
+    <div class="report-row"><span class="lbl">${c.name}</span>
+      <div class="bar" style="flex:1"><span style="width:${c.avg}%"></span></div><span class="num">${c.avg}%</span></div>`).join('');
+  const subs=[['Smart Money',74],['AI',69],['Exam prep',58],['Stories',81]];
+  document.getElementById('subjReport').innerHTML=subs.map(s=>`
+    <div class="report-row"><span class="lbl">${s[0]}</span>
+      <div class="bar" style="flex:1"><span style="width:${s[1]}%"></span></div><span class="num">${s[1]}%</span></div>`).join('');
+}
+
+/* access controls */
+function renderControls(){
+  document.getElementById('gradeControls').innerHTML='';
+  grades.forEach((gr,gi)=>{
+    const row=document.createElement('div');row.className='grade-row';
+    row.innerHTML=`<span class="gname">${gr.g}</span>
+      <div class="age-chips">${AGE_BANDS.map(a=>`<span class="age-chip ${gr.ages.includes(a)?'on':''}" data-a="${a}">${a}</span>`).join('')}</div>
+      <div class="toggle-wrap">Hide mature topics <button class="toggle ${gr.restrict?'on':''}" data-k="restrict"></button></div>
+      <span class="consent ${gr.consent==='ok'?'ok':'pend'}">${gr.consent==='ok'?'Consent on file':'Consent pending'}</span>`;
+    row.querySelectorAll('.age-chip').forEach(ch=>ch.addEventListener('click',()=>{
+      const a=ch.dataset.a;gr.ages.includes(a)?gr.ages=gr.ages.filter(x=>x!==a):gr.ages.push(a);renderControls();
+    }));
+    row.querySelector('[data-k]').addEventListener('click',()=>{gr.restrict=!gr.restrict;renderControls();toast('Access updated for '+gr.g);});
+    document.getElementById('gradeControls').appendChild(row);
+  });
+}
+
+function refresh(){refreshSeats();renderAttention();renderMembers();renderClasses();renderAssign();renderReports();}
+refresh();renderControls();
+</script>
+</body>
+</html>
