@@ -7,4 +7,4 @@
 # API proxy → your Render backend.
 # REPLACE the host below with YOUR Render service URL (no trailing slash).
 # This makes the front end call same-origin /api, so there is no CORS to configure.
-/api/*  https://newagelearning-2.onrender.com/api/:splat  200
+/api/*  https://YOUR-RENDER-SERVICE.onrender.com/api/:splat  200

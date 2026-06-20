@@ -295,16 +295,16 @@
     <!-- APPEARANCE -->
     <section class="panel" data-panel="appearance">
       <div class="card">
-        <div class="card-head"><div><h3>Appearance</h3><p>Edit text, and upload pictures or video used across the site.</p></div><button class="btn btn-primary btn-sm" onclick="toast('Changes saved (demo)')">Save changes</button></div>
-        <div class="block-edit"><div class="lbl">📝 Homepage · hero headline</div><div class="editable" contenteditable="true">Learning that helps young India lead the world.</div></div>
-        <div class="block-edit"><div class="lbl">📝 Homepage · hero subtext</div><div class="editable" contenteditable="true">Read, listen and watch — across AI, smart money and the skills tomorrow asks for.</div></div>
+        <div class="card-head"><div><h3>Appearance</h3><p>Edit text and upload pictures. Saving publishes to the live website instantly.</p></div><button class="btn btn-primary btn-sm" id="saveAppearance">Save changes</button></div>
+        <div class="block-edit"><div class="lbl">📝 Homepage · hero headline</div><div class="editable" contenteditable="true" data-key="home.hero.headline">Learning that helps young India lead the world.</div></div>
+        <div class="block-edit"><div class="lbl">📝 Homepage · hero subtext</div><div class="editable" contenteditable="true" data-key="home.hero.subtext">Read, listen and watch — across AI, smart money and the skills tomorrow asks for.</div></div>
         <div class="block-edit"><div class="lbl">🖼 Mission · "Young India" picture</div>
           <div style="display:flex;gap:12px;align-items:center"><img class="img-preview" id="ap1" alt="preview"><button class="btn btn-ghost btn-sm" onclick="pickImage(u=>document.getElementById('ap1').src=u,'Picture updated')">Upload picture</button><button class="btn btn-ghost btn-sm" onclick="pickFile('video/*',n=>toast('Video set: '+n))">Use video</button></div>
         </div>
         <div class="block-edit"><div class="lbl">🖼 Mission · "Smart Money" picture</div>
           <div style="display:flex;gap:12px;align-items:center"><img class="img-preview" id="ap2" alt="preview" style="background:linear-gradient(135deg,var(--marigold),var(--coral))"><button class="btn btn-ghost btn-sm" onclick="pickImage(u=>document.getElementById('ap2').src=u,'Picture updated')">Upload picture</button></div>
         </div>
-        <div class="block-edit"><div class="lbl">📝 About section · headline</div><div class="editable" contenteditable="true">Learning built for the new world — and for India's place in it.</div></div>
+        <div class="block-edit"><div class="lbl">📝 About section · headline</div><div class="editable" contenteditable="true" data-key="home.about.headline">Learning built for the new world — and for India's place in it.</div></div>
       </div>
     </section>
 
@@ -348,9 +348,9 @@
       <div class="full price-wrap" id="priceWrap"><label class="flbl">Price (₹)</label><input type="text" id="mPrice" placeholder="249"></div>
       <div class="full"><label class="flbl">Cover image</label><img class="cover-prev" id="coverPrev" alt="cover"><button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="pickImage(u=>document.getElementById('coverPrev').src=u,'Cover added')">Upload cover picture</button></div>
       <div class="full"><label class="flbl">Content files</label>
-        <div class="upload-row"><span class="uic">📄</span><span class="uname" id="uPdf">PDF book — readable format</span><button class="btn btn-ghost btn-sm" onclick="pickFile('application/pdf',n=>setUname('uPdf',n))">Upload PDF</button></div>
-        <div class="upload-row"><span class="uic">🎧</span><span class="uname" id="uAud">Audio — voice content</span><button class="btn btn-ghost btn-sm" onclick="pickFile('audio/*',n=>setUname('uAud',n))">Upload audio</button></div>
-        <div class="upload-row"><span class="uic">🎬</span><span class="uname" id="uVid">Video — view content</span><button class="btn btn-ghost btn-sm" onclick="pickFile('video/*',n=>setUname('uVid',n))">Upload video</button></div>
+        <div class="upload-row"><span class="uic">📄</span><span class="uname" id="uPdf">PDF book — readable format</span><button class="btn btn-ghost btn-sm" onclick="pickContentFile('pdf','application/pdf','uPdf')">Upload PDF</button></div>
+        <div class="upload-row"><span class="uic">🎧</span><span class="uname" id="uAud">Audio — voice content</span><button class="btn btn-ghost btn-sm" onclick="pickContentFile('audio','audio/*','uAud')">Upload audio</button></div>
+        <div class="upload-row"><span class="uic">🎬</span><span class="uname" id="uVid">Video — view content</span><button class="btn btn-ghost btn-sm" onclick="pickContentFile('video','video/*','uVid')">Upload video</button></div>
       </div>
     </div>
     <div class="hint">🔒 Access level &amp; price are saved but hidden from the public site — visible here in the admin only, as requested.</div>
@@ -368,6 +368,9 @@
       <select id="fType"><option value="Text">Text</option><option value="Number">Number</option><option value="Email">Email</option><option value="Date">Date</option><option value="Dropdown">Dropdown (select)</option></select>
     </div>
     <div class="fld" id="optWrap" style="display:none;margin-bottom:13px"><label class="flbl">Dropdown options <span style="color:var(--muted);font-weight:400">(comma separated)</span></label><input type="text" id="fOpts" placeholder="e.g. AI, Smart money, Exam prep"></div>
+    <div class="fld" style="margin-bottom:13px"><label class="flbl">Applies to</label>
+      <select id="fApplies"><option value="">All users</option><option value="learner">Learner</option><option value="educator">Educator</option><option value="institution">Institution</option></select>
+    </div>
     <div style="display:flex;gap:18px;margin-bottom:6px">
       <div class="toggle-wrap">Enabled <button class="toggle on" id="fEnabled"></button></div>
       <div class="toggle-wrap">Mandatory <button class="toggle" id="fMand"></button></div>
@@ -383,7 +386,7 @@
 const API_BASE='';  // '' = same-origin /api (proxied to your backend). Or put your Render URL here.
 let ADMIN_TOKEN=null; try{ADMIN_TOKEN=sessionStorage.getItem('nal_admin_token');}catch(e){}
 const gate=document.getElementById('gate');
-function showApp(){gate.classList.add('hidden');}
+function showApp(){gate.classList.add('hidden');onAuthed();}
 async function tryResume(){
   if(!ADMIN_TOKEN)return;
   try{const r=await fetch(API_BASE+'/api/auth/me',{headers:{Authorization:'Bearer '+ADMIN_TOKEN}});
@@ -407,6 +410,38 @@ document.getElementById('gLogin').addEventListener('click',async()=>{
 document.getElementById('adminLogout').addEventListener('click',()=>{ADMIN_TOKEN=null;try{sessionStorage.removeItem('nal_admin_token');}catch(e){}location.reload();});
 tryResume();
 
+/* ===== live data layer (everything below talks to the backend) ===== */
+async function adminFetch(path,opts={}){
+  const o=Object.assign({},opts);
+  o.headers=Object.assign({'Content-Type':'application/json'},opts.headers||{},{Authorization:'Bearer '+ADMIN_TOKEN});
+  const r=await fetch(API_BASE+path,o);
+  if(!r.ok){let m='';try{m=(await r.json()).error;}catch(e){}throw new Error(m||('HTTP '+r.status));}
+  return r.status===204?null:r.json();
+}
+function onAuthed(){loadAppearance();loadContentLive();loadFieldsLive();loadApprovalsLive();}
+
+/* appearance — edits publish to the public site */
+async function loadAppearance(){
+  try{const blocks=await fetch(API_BASE+'/api/appearance').then(r=>r.json());
+    const byKey={};(blocks||[]).forEach(b=>byKey[b.block_key]=b);
+    document.querySelectorAll('.editable[data-key]').forEach(el=>{const b=byKey[el.dataset.key];if(b&&b.text_value)el.textContent=b.text_value;});
+  }catch(e){}
+}
+document.getElementById('saveAppearance').addEventListener('click',async()=>{
+  const els=[...document.querySelectorAll('.editable[data-key]')];
+  try{
+    for(const el of els){
+      await adminFetch('/api/admin/appearance/'+encodeURIComponent(el.dataset.key),
+        {method:'PUT',body:JSON.stringify({text_value:el.textContent.trim(),type:'text'})});
+    }
+    toast('Saved — live on the website now');
+  }catch(e){toast('Save failed: '+e.message);}
+});
+
+/* file capture for the Add-content modal */
+const modalFiles={};
+function pickContentFile(kind,accept,labelId){pickFile(accept,(name,file)=>{modalFiles[kind]=file;setUname(labelId,name);});}
+
 /* nav */
 const navItems=[...document.querySelectorAll('.nav-item')],panels=[...document.querySelectorAll('.panel')];
 const titles={dash:['Dashboard','A snapshot of your platform'],catalog:['Catalog structure','Sections, sub-sections and sub-sub-sections'],content:['Content library','Books, PDFs, audio and video'],approvals:['Approvals','Review before content goes live'],blogs:['Blogs','Articles for traffic and SEO'],signup:['Signup fields','Control what users are asked'],branding:['Branding & logos','Logo placement across web & app'],appearance:['Appearance','Text, pictures and video'],users:['Users & campaigns','Segments and notifications']};
@@ -419,7 +454,7 @@ document.getElementById('ham').addEventListener('click',()=>document.getElementB
 let tT;function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.transform='translateX(-50%) translateY(0)';clearTimeout(tT);tT=setTimeout(()=>t.style.transform='translateX(-50%) translateY(80px)',2400);}
 
 /* file pickers */
-function pickFile(accept,cb){const i=document.createElement('input');i.type='file';i.accept=accept;i.onchange=()=>{if(i.files[0])cb(i.files[0].name);};i.click();}
+function pickFile(accept,cb){const i=document.createElement('input');i.type='file';i.accept=accept;i.onchange=()=>{if(i.files[0])cb(i.files[0].name,i.files[0]);};i.click();}
 function pickImage(cb,msg){const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=()=>{if(i.files[0]){cb(URL.createObjectURL(i.files[0]));toast(msg||'Image uploaded');}};i.click();}
 function setUname(id,name){const el=document.getElementById(id);el.textContent=name;el.classList.add('has');}
 
@@ -450,28 +485,42 @@ document.getElementById('addSection').addEventListener('click',()=>{const n=prom
 renderTree();
 
 /* content library */
-let content=[
-  {title:'AI for Curious Kids',author:'Priya Nair',files:['PDF','Audio','Video'],age:'Ages 5–12',access:'free',live:true},
-  {title:'Smart Money for Teens',author:'Marcus Webb',files:['PDF','Audio'],age:'Grades 8–12',access:'paid',price:'249',live:true},
-  {title:'Future Skills Playbook',author:'Aisha Kamara',files:['PDF','Video'],age:'Professional',access:'trial',price:'399',live:false},
-];
+let content=[];
+async function loadContentLive(){
+  try{content=await adminFetch('/api/admin/content');}catch(e){content=[];}
+  renderContent();
+}
+function fmtAccess(a){return {free:['Free','a-free'],trial:['Trial','a-trial'],paid:['Paid','a-paid']}[a]||['Free','a-free'];}
 function renderContent(){
   const b=document.getElementById('contentBody');b.innerHTML='';
-  content.forEach((c,i)=>{
+  if(!content.length){b.innerHTML='<tr><td colspan="7" style="color:var(--muted)">No content yet — click “Add content”.</td></tr>';return;}
+  content.forEach(c=>{
     const tr=document.createElement('tr');
-    const acc={free:['Free','a-free'],trial:['Trial','a-trial'],paid:['Paid','a-paid']}[c.access];
-    const price=c.price?` · ₹${c.price}`:'';
+    const acc=fmtAccess(c.access_level);
+    const price=c.price_inr?` · ₹${c.price_inr}`:'';
+    const formats=(c.formats||[]).filter(Boolean);
+    const live=c.status==='live';
     tr.innerHTML=`<td><b>${c.title}</b></td><td class="hide-sm">${c.author||'—'}</td>
-      <td><div class="fmt-badges">${c.files.map(f=>`<span class="fb">${f}</span>`).join('')}</div></td>
-      <td class="hide-sm">${c.age}</td><td><span class="access ${acc[1]}">${acc[0]}${price}</span></td>
-      <td><button class="toggle ${c.live?'on':''}" title="Show on site"></button></td>
-      <td><button class="iconbtn" title="Delete">✕</button></td>`;
-    tr.querySelector('.toggle').onclick=()=>{c.live=!c.live;toast(c.live?'Now live on the site':'Hidden from the site');renderContent();};
-    tr.querySelector('.iconbtn').onclick=()=>{content.splice(i,1);renderContent();};
+      <td><div class="fmt-badges">${formats.map(f=>`<span class="fb">${String(f).toUpperCase()}</span>`).join('')||'<span class="fb">—</span>'}</div></td>
+      <td class="hide-sm">${c.age_group||'—'}</td><td><span class="access ${acc[1]}">${acc[0]}${price}</span></td>
+      <td><button class="toggle ${live?'on':''}" title="Show on site"></button></td>
+      <td style="white-space:nowrap"><button class="iconbtn add" title="Upload new PDF version">⬆</button><button class="iconbtn del" title="Delete">✕</button></td>`;
+    tr.querySelector('.toggle').onclick=async()=>{const ns=live?'draft':'live';try{await adminFetch('/api/admin/content/'+c.id,{method:'PATCH',body:JSON.stringify({status:ns})});c.status=ns;toast(ns==='live'?'Now live on the site':'Hidden from the site');renderContent();}catch(e){toast('Failed: '+e.message);}};
+    tr.querySelector('.iconbtn.add').onclick=()=>uploadVersion(c);
+    tr.querySelector('.iconbtn.del').onclick=async()=>{if(!confirm('Delete “'+c.title+'”?'))return;try{await adminFetch('/api/admin/content/'+c.id,{method:'DELETE'});content=content.filter(x=>x.id!==c.id);renderContent();toast('Deleted');}catch(e){toast('Failed: '+e.message);}};
     b.appendChild(tr);
   });
 }
-renderContent();
+// upload a fresh PDF for an existing title — replaces the previous version
+function uploadVersion(c){
+  pickFile('application/pdf',async(name,file)=>{
+    try{const fd=new FormData();fd.append('file',file);fd.append('kind','pdf');
+      const r=await fetch(API_BASE+'/api/admin/content/'+c.id+'/files',{method:'POST',headers:{Authorization:'Bearer '+ADMIN_TOKEN},body:fd});
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      toast('New PDF version uploaded for “'+c.title+'”');loadContentLive();
+    }catch(e){toast('Upload failed: '+e.message);}
+  });
+}
 
 /* content modal */
 const cModal=document.getElementById('contentModal');
@@ -480,32 +529,53 @@ document.getElementById('cmCancel').addEventListener('click',()=>cModal.classLis
 cModal.addEventListener('click',e=>{if(e.target===cModal)cModal.classList.remove('on');});
 const accessSel=document.getElementById('mAccess'),priceWrap=document.getElementById('priceWrap');
 accessSel.addEventListener('change',()=>priceWrap.classList.toggle('show',accessSel.value!=='free'));
-document.getElementById('cmSave').addEventListener('click',()=>{
+document.getElementById('cmSave').addEventListener('click',async()=>{
   const title=document.getElementById('mTitle').value.trim();
   if(!title){toast('Add a title first');return;}
-  const files=[];if(document.getElementById('uPdf').classList.contains('has'))files.push('PDF');if(document.getElementById('uAud').classList.contains('has'))files.push('Audio');if(document.getElementById('uVid').classList.contains('has'))files.push('Video');
-  content.unshift({title,author:document.getElementById('mAuthor').value.trim(),files:files.length?files:['PDF'],age:document.getElementById('mAge').value,access:accessSel.value,price:document.getElementById('mPrice').value.trim(),live:true});
-  renderContent();cModal.classList.remove('on');toast('Content added and published');
-  ['mTitle','mAuthor','mPrice'].forEach(id=>document.getElementById(id).value='');
-  ['uPdf','uAud','uVid'].forEach(id=>{const e=document.getElementById(id);e.classList.remove('has');});
-  document.getElementById('uPdf').textContent='PDF book — readable format';document.getElementById('uAud').textContent='Audio — voice content';document.getElementById('uVid').textContent='Video — view content';
+  const access=accessSel.value;
+  const cover=document.getElementById('coverPrev').src;
+  const body={title,
+    author:document.getElementById('mAuthor').value.trim()||null,
+    publication_date:document.getElementById('mDate').value.trim()||null,
+    age_group:document.getElementById('mAge').value,
+    access_level:access,
+    price_inr:access!=='free'?(parseInt(document.getElementById('mPrice').value,10)||null):null,
+    cover_image_url:(cover&&cover.startsWith('http'))?cover:null,
+    status:'live'};
+  try{
+    const created=await adminFetch('/api/admin/content',{method:'POST',body:JSON.stringify(body)});
+    for(const kind of ['pdf','audio','video']){
+      if(modalFiles[kind]){const fd=new FormData();fd.append('file',modalFiles[kind]);fd.append('kind',kind);
+        await fetch(API_BASE+'/api/admin/content/'+created.id+'/files',{method:'POST',headers:{Authorization:'Bearer '+ADMIN_TOKEN},body:fd});}
+    }
+    cModal.classList.remove('on');toast('Content added — live on the site');loadContentLive();
+    ['mTitle','mAuthor','mPrice','mDate'].forEach(id=>document.getElementById(id).value='');
+    ['uPdf','uAud','uVid'].forEach(id=>{const e=document.getElementById(id);e.classList.remove('has');});
+    document.getElementById('uPdf').textContent='PDF book — readable format';document.getElementById('uAud').textContent='Audio — voice content';document.getElementById('uVid').textContent='Video — view content';
+    Object.keys(modalFiles).forEach(k=>delete modalFiles[k]);
+  }catch(e){toast('Save failed: '+e.message);}
 });
 
+
 /* approvals */
-let pendContent=[
-  {title:'Algebra Made Easy',by:'R. Sharma (Educator)',color:'var(--violet)',ic:'📐'},
-  {title:'Intro to Investing for Teens',by:'N. Iyer (Educator)',color:'var(--marigold)',ic:'💡'},
-];
-let pendBlogs=[
-  {title:'5 ways to teach kids about saving',by:'Educator submission',color:'var(--teal)',ic:'✎'},
-];
+let pendContent=[];
+let pendBlogs=[];
+async function loadApprovalsLive(){
+  try{pendContent=(await adminFetch('/api/admin/approvals/content')).map(c=>({id:c.id,title:c.title,by:(c.submitter||'Educator')+' (Educator)',color:'var(--violet)',ic:'📐'}));}catch(e){pendContent=[];}
+  try{pendBlogs=(await adminFetch('/api/admin/approvals/blogs')).map(b=>({id:b.id,title:b.title,by:'Blog submission',color:'var(--teal)',ic:'✎'}));}catch(e){pendBlogs=[];}
+  renderApprovals();updateCount();
+}
 function renderApprovals(){
   const pc=document.getElementById('pendContent');pc.innerHTML='';
   if(!pendContent.length)pc.innerHTML='<p style="color:var(--muted);font-size:.85rem">No content awaiting review. 🎉</p>';
-  pendContent.forEach((p,i)=>pc.appendChild(apprRow(p,()=>{content.unshift({title:p.title,author:p.by.split(' (')[0],files:['PDF'],age:'All ages',access:'free',live:true});pendContent.splice(i,1);renderApprovals();renderContent();updateCount();toast('Approved — now live on the site');},()=>{pendContent.splice(i,1);renderApprovals();updateCount();toast('Rejected and sent back to educator');})));
+  pendContent.forEach(p=>pc.appendChild(apprRow(p,
+    async()=>{try{await adminFetch('/api/admin/approvals/content/'+p.id+'/approve',{method:'POST'});toast('Approved — now live on the site');loadApprovalsLive();loadContentLive();}catch(e){toast('Failed: '+e.message);}},
+    async()=>{try{await adminFetch('/api/admin/approvals/content/'+p.id+'/reject',{method:'POST'});toast('Rejected and sent back to educator');loadApprovalsLive();}catch(e){toast('Failed: '+e.message);}})));
   const pb=document.getElementById('pendBlogs');pb.innerHTML='';
   if(!pendBlogs.length)pb.innerHTML='<p style="color:var(--muted);font-size:.85rem">No blogs awaiting review. 🎉</p>';
-  pendBlogs.forEach((p,i)=>pb.appendChild(apprRow(p,()=>{blogs.unshift({t:p.title,st:'Published · just now',pub:true});pendBlogs.splice(i,1);renderApprovals();renderBlogs();updateCount();toast('Blog approved and published');},()=>{pendBlogs.splice(i,1);renderApprovals();updateCount();toast('Blog rejected');})));
+  pendBlogs.forEach(p=>pb.appendChild(apprRow(p,
+    async()=>{try{await adminFetch('/api/admin/approvals/blogs/'+p.id+'/approve',{method:'POST'});toast('Blog approved and published');loadApprovalsLive();}catch(e){toast('Failed: '+e.message);}},
+    async()=>{try{await adminFetch('/api/admin/approvals/blogs/'+p.id+'/reject',{method:'POST'});toast('Blog rejected');loadApprovalsLive();}catch(e){toast('Failed: '+e.message);}})));
 }
 function apprRow(p,onOk,onNo){
   const d=document.createElement('div');d.className='approve-row';
@@ -518,32 +588,29 @@ function apprRow(p,onOk,onNo){
 function updateCount(){const n=pendContent.length+pendBlogs.length;document.getElementById('apprCount').textContent=n;document.getElementById('apprStat').textContent=n;}
 
 /* signup fields */
-let fields=[
-  {name:'Name',type:'Text',on:true,mand:true,locked:true},
-  {name:'Mobile number',type:'Number',on:true,mand:true},
-  {name:'City',type:'Text',on:true,mand:false},
-  {name:'State',type:'Dropdown',opts:['Karnataka','Maharashtra','Delhi','Tamil Nadu'],on:true,mand:false},
-  {name:'Email ID',type:'Email',on:true,mand:false},
-  {name:'Class',type:'Dropdown',opts:['Class 1','Class 2','Class 3'],on:false,mand:false},
-  {name:'Interested in',type:'Dropdown',opts:['AI','Smart money','Exam prep'],on:false,mand:false},
-];
+let fields=[];
+async function loadFieldsLive(){
+  try{fields=await adminFetch('/api/admin/signup-fields');}catch(e){fields=[];}
+  renderFields();
+}
 function renderFields(){
   const el=document.getElementById('fieldList');el.innerHTML='';
-  fields.forEach((f,i)=>{
+  if(!fields.length){el.innerHTML='<p style="color:var(--muted);font-size:.85rem">No signup fields yet.</p>';return;}
+  fields.forEach(f=>{
     const r=document.createElement('div');r.className='field-row';
-    const opts=(f.type==='Dropdown'&&f.opts)?`<div class="opts">${f.opts.map(o=>`<span class="opt-chip">${o}</span>`).join('')}</div>`:'<div class="opts"></div>';
-    r.innerHTML=`<span class="fname">${f.name}${f.locked?' <span class="admin-only">system</span>':''}</span><span class="ftype">${f.type}</span>${opts}
-      <div class="toggle-wrap">On <button class="toggle ${f.on?'on':''}" data-k="on"></button></div>
-      <div class="toggle-wrap">Mandatory <button class="toggle ${f.mand?'on':''}" data-k="mand"></button></div>`;
+    const applies=f.applies_to?f.applies_to:'all users';
+    const opts=(f.type==='dropdown'&&f.options&&f.options.length)?`<div class="opts">${f.options.map(o=>`<span class="opt-chip">${o}</span>`).join('')}</div>`:'<div class="opts"></div>';
+    r.innerHTML=`<span class="fname">${f.label}${f.is_system?' <span class="admin-only">system</span>':''} <span style="color:var(--muted);font-weight:400;font-size:.72rem">· ${applies}</span></span><span class="ftype">${f.type}</span>${opts}
+      <div class="toggle-wrap">On <button class="toggle ${f.is_enabled?'on':''}" data-k="is_enabled"></button></div>
+      <div class="toggle-wrap">Mandatory <button class="toggle ${f.is_mandatory?'on':''}" data-k="is_mandatory"></button></div>`;
     const del=document.createElement('button');del.className='iconbtn';del.textContent='✕';del.title='Delete field';
-    if(f.locked)del.style.visibility='hidden';
-    del.onclick=()=>{fields.splice(i,1);renderFields();};
+    if(f.is_system)del.style.visibility='hidden';
+    del.onclick=async()=>{try{await adminFetch('/api/admin/signup-fields/'+f.id,{method:'DELETE'});fields=fields.filter(x=>x.id!==f.id);renderFields();toast('Field removed from signup');}catch(e){toast('Failed: '+e.message);}};
     r.appendChild(del);
-    r.querySelectorAll('.toggle').forEach(t=>t.addEventListener('click',()=>{if(f.locked&&t.dataset.k==='mand')return;f[t.dataset.k]=!f[t.dataset.k];renderFields();}));
+    r.querySelectorAll('.toggle').forEach(t=>t.addEventListener('click',async()=>{const k=t.dataset.k;if(f.is_system&&k==='is_mandatory')return;const nv=!f[k];try{await adminFetch('/api/admin/signup-fields/'+f.id,{method:'PATCH',body:JSON.stringify({[k]:nv})});f[k]=nv;renderFields();}catch(e){toast('Failed: '+e.message);}}));
     el.appendChild(r);
   });
 }
-renderFields();
 
 /* field modal */
 const fModal=document.getElementById('fieldModal'),fType=document.getElementById('fType'),optWrap=document.getElementById('optWrap');
@@ -554,13 +621,19 @@ fModal.addEventListener('click',e=>{if(e.target===fModal)fModal.classList.remove
 fType.addEventListener('change',()=>optWrap.style.display=fType.value==='Dropdown'?'block':'none');
 fEnabled.addEventListener('click',()=>fEnabled.classList.toggle('on'));
 fMand.addEventListener('click',()=>fMand.classList.toggle('on'));
-document.getElementById('fmSave').addEventListener('click',()=>{
-  const name=document.getElementById('fName').value.trim();
-  if(!name){toast('Enter a field name');return;}
-  const type=fType.value;const f={name,type,on:fEnabled.classList.contains('on'),mand:fMand.classList.contains('on')};
-  if(type==='Dropdown'){const o=document.getElementById('fOpts').value.split(',').map(s=>s.trim()).filter(Boolean);f.opts=o.length?o:['Option 1','Option 2'];}
-  fields.push(f);renderFields();fModal.classList.remove('on');toast('Field added to signup form');
-  document.getElementById('fName').value='';document.getElementById('fOpts').value='';fType.value='Text';optWrap.style.display='none';
+document.getElementById('fmSave').addEventListener('click',async()=>{
+  const label=document.getElementById('fName').value.trim();
+  if(!label){toast('Enter a field name');return;}
+  const body={label,type:fType.value.toLowerCase(),
+    is_enabled:fEnabled.classList.contains('on'),
+    is_mandatory:fMand.classList.contains('on'),
+    applies_to:document.getElementById('fApplies').value||null};
+  if(fType.value==='Dropdown'){body.options=document.getElementById('fOpts').value.split(',').map(s=>s.trim()).filter(Boolean);}
+  try{
+    await adminFetch('/api/admin/signup-fields',{method:'POST',body:JSON.stringify(body)});
+    await loadFieldsLive();fModal.classList.remove('on');toast('Field added to the signup form');
+    document.getElementById('fName').value='';document.getElementById('fOpts').value='';fType.value='Text';optWrap.style.display='none';document.getElementById('fApplies').value='';
+  }catch(e){toast('Failed: '+e.message);}
 });
 
 /* branding logos */

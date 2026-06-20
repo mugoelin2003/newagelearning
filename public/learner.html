@@ -272,6 +272,7 @@
             <select id="pfInterest"><option>AI</option><option selected>Smart money</option><option>Exam prep</option><option>Future skills</option><option>Stories for kids</option></select>
           </div>
           <button class="btn btn-solid" id="saveProfile">Save changes</button>
+          <button class="btn btn-ghost" id="logoutBtn" style="margin-left:8px">Log out</button>
         </div>
         <div class="card">
           <h3>I'm learning as a…</h3><div class="sub">Changes the content we surface for you.</div>
@@ -355,8 +356,10 @@ let progress={1:{percent:45,page:1},3:{percent:70,page:0}}; // saved positions
 ==================================================================== */
 const API_BASE='';           // '' = same-origin /api (proxied to your backend by Netlify)
 const USE_MOCK=false;        // live: calls the real backend. Set true to demo offline.
-let AUTH_TOKEN=null;          // set this after /api/auth/login
+let AUTH_TOKEN=null; try{AUTH_TOKEN=localStorage.getItem('nal_token');}catch(e){}  // set by login on the public site
 const FMAP={pdf:'read',audio:'listen',video:'watch'};
+const KIND={read:'pdf',listen:'audio',watch:'video'};
+function fileUrl(mode){return API_BASE+'/api/content/'+current.id+'/file/'+KIND[mode];}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 async function call(path,opts={}){
   const res=await fetch(API_BASE+path,{...opts,headers:{'Content-Type':'application/json',
@@ -485,6 +488,7 @@ document.getElementById('saveProfile').addEventListener('click',()=>{
   document.getElementById('hello').textContent='Welcome back, '+nm.split(' ')[0]+' 👋';
   toast('Profile saved');
 });
+document.getElementById('logoutBtn').addEventListener('click',()=>{try{localStorage.removeItem('nal_token');localStorage.removeItem('nal_user');}catch(e){}location.href='/';});
 
 /* ---------- reader / player ---------- */
 const reader=document.getElementById('reader'),readerBody=document.getElementById('readerBody');
@@ -514,6 +518,7 @@ function renderRead(){
     <div style="max-width:640px;width:100%">
       <div class="resumed ${saved&&saved.page>0?'show':''}">↩ Resumed at page ${readPage+1}</div>
       <div class="page"><h2>${pg.h}</h2>${pg.p.map(t=>`<p>${t}</p>`).join('')}</div>
+      ${!USE_MOCK?`<div style="text-align:center;margin:14px 0"><a class="btn btn-solid" href="${fileUrl('read')}" target="_blank" rel="noopener">📄 Open full PDF</a></div>`:''}
       <div class="pager"><button class="btn btn-ghost" id="prevPg">← Previous</button>
         <span class="pg">Page ${readPage+1} of ${PAGES.length}</span>
         <button class="btn btn-solid" id="nextPg">Next →</button></div></div>`;
@@ -527,6 +532,23 @@ function saveRead(){
 }
 function renderPlayer(m){
   const saved=progress[current.id];playPct=(saved&&saved.percent)||0;
+  if(!USE_MOCK){
+    const media=m==='watch'
+      ? `<video id="media" controls playsinline style="width:100%;max-height:58vh;border-radius:14px;background:#000"></video>`
+      : `<audio id="media" controls style="width:100%;margin-top:8px"></audio>`;
+    readerBody.innerHTML=`
+      <div class="player">
+        <div class="pttl">${current.title}</div><div class="pmeta">${m==='listen'?'Audio · voice content':'Video · view content'}</div>
+        ${media}
+        <p style="color:var(--muted);font-size:.78rem;margin-top:10px">Streaming from your library.</p>
+      </div>`;
+    const el=document.getElementById('media');el.src=fileUrl(m);
+    el.addEventListener('loadedmetadata',()=>{if(saved&&saved.percent&&el.duration)el.currentTime=saved.percent/100*el.duration;});
+    el.addEventListener('pause',()=>{if(el.duration)api.saveProgress(current.id,{percent:Math.round(el.currentTime/el.duration*100),page:0});});
+    el.addEventListener('ended',()=>{api.saveProgress(current.id,{percent:100,page:0});toast('Finished! 🎉');refreshAll();});
+    el.addEventListener('error',()=>{readerBody.innerHTML='<p style="color:var(--muted);padding:24px;text-align:center">This isn’t available to stream yet — the file may still be uploading.</p>';});
+    return;
+  }
   const dur=m==='listen'?'12:40':'08:15';
   readerBody.innerHTML=`
     <div class="player">
@@ -561,6 +583,7 @@ function refreshAll(){renderHome();renderBrowse();renderWish();refreshWishCount(
 
 /* ---------- init: load everything from the API ---------- */
 async function init(){
+  try{const u=JSON.parse(localStorage.getItem('nal_user')||'null');if(u&&u.name){document.getElementById('hello').textContent='Welcome back, '+u.name.split(' ')[0]+' 👋';document.getElementById('chipName').textContent=u.name;document.getElementById('avatar').textContent=(u.name[0]||'A').toUpperCase();}}catch(e){}
   document.getElementById('recoGrid').innerHTML='<p style="color:var(--muted)">Loading your library…</p>';
   try{ items=await api.getContent(); }
   catch(e){ items=MOCK_ITEMS; toast('Backend unreachable — showing offline data'); }

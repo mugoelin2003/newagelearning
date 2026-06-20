@@ -221,8 +221,8 @@
   <div class="wrap hero-grid">
     <div>
       <span class="eyebrow">For India &amp; the Indian diaspora</span>
-      <h1 style="margin-top:14px">Learning that helps <em>young India</em> lead the world.</h1>
-      <p class="lede">Read, listen and watch — across AI, smart money and the skills tomorrow asks for. Built for learners, the educators who guide them, and the institutions that bring them together.</p>
+      <h1 id="heroHeadline" style="margin-top:14px">Learning that helps <em>young India</em> lead the world.</h1>
+      <p class="lede" id="heroSub">Read, listen and watch — across AI, smart money and the skills tomorrow asks for. Built for learners, the educators who guide them, and the institutions that bring them together.</p>
       <div class="hero-cta">
         <button class="btn btn-solid btn-lg" data-auth="signup">Start learning free</button>
         <button class="btn btn-ghost btn-lg" data-scroll="library">Explore the library</button>
@@ -360,7 +360,7 @@
           <h2>Read it. Hear it. Watch it. Share it.</h2>
           <p>Every title comes in the formats that suit you. Save anything to your list when you're signed in, and pick up right where you left off.</p>
         </div>
-        <div class="lib-grid">
+        <div class="lib-grid" id="libGrid">
           <article class="book">
             <div class="cover c1">📘</div>
             <div class="body"><h4>AI for Curious Kids</h4><div class="meta">Ages 8–12</div><div class="formats"><span class="fmt">📖 Read</span><span class="fmt">🎧 Listen</span><span class="fmt">▶ Watch</span></div></div>
@@ -391,7 +391,7 @@
 <section class="cta" id="about">
   <div class="wrap">
     <span class="eyebrow">Why we exist</span>
-    <h2>Learning built for the new world — and for India's place in it.</h2>
+    <h2 id="aboutHeadline">Learning built for the new world — and for India's place in it.</h2>
     <p>We're building new-age learning that's mobile-first, multi-format and made to grow with every learner, educator and institution.</p>
     <div class="hero-cta">
       <button class="btn btn-solid btn-lg" data-auth="signup">Create free account</button>
@@ -423,6 +423,7 @@
       <div class="msub">Log in to your wishlist, progress and recommendations.</div>
       <div class="fld"><label>Email or mobile <span class="req">*</span></label><input type="text" id="li_id" placeholder="you@example.com or 98xxxxxxxx"></div>
       <div class="fld"><label>Password <span class="req">*</span></label><input type="password" id="li_pw" placeholder="••••••••"></div>
+      <div class="err" id="loginErr"></div>
       <button class="btn btn-solid" id="loginSubmit">Log in</button>
       <div class="modal-alt">New here? <a data-switch="signup">Create an account</a></div>
     </div>
@@ -439,9 +440,9 @@
       <div class="fld"><label>Mobile number <span class="req">*</span></label><input type="text" id="su_mob" placeholder="98xxxxxxxx"></div>
       <div class="fld"><label>Email <span style="color:var(--muted);font-weight:400">(optional)</span></label><input type="text" id="su_email" placeholder="you@example.com"></div>
       <div class="fld"><label>City</label><input type="text" id="su_city" placeholder="e.g. Bengaluru"></div>
-      <div class="fld" id="interestFld"><label>Interested in</label>
-        <select id="su_interest"><option value="">Select…</option><option>AI</option><option>Smart money</option><option>Exam prep</option><option>Future skills</option><option>Stories for kids</option></select>
-      </div>
+      <div class="fld"><label>Create password <span class="req">*</span></label><input type="password" id="su_pw" placeholder="Choose a password" autocomplete="new-password"></div>
+      <div id="su_dynamic"></div>
+      <div class="err" id="signupErr"></div>
       <button class="btn btn-solid" id="signupSubmit">Create free account</button>
       <div class="modal-alt">Already have an account? <a data-switch="login">Log in</a></div>
     </div>
@@ -520,19 +521,50 @@
 
   // role pick
   let role='learner';
-  function setRole(r){role=r;document.querySelectorAll('.role-opt').forEach(o=>o.classList.toggle('on',o.dataset.role===r));}
+  function setRole(r){role=r;document.querySelectorAll('.role-opt').forEach(o=>o.classList.toggle('on',o.dataset.role===r));if(window.renderSignupExtras)renderSignupExtras(r);}
   document.querySelectorAll('.role-opt').forEach(o=>o.addEventListener('click',()=>setRole(o.dataset.role)));
 
-  // submit (demo validation)
-  document.getElementById('loginSubmit').addEventListener('click',()=>{
-    const id=document.getElementById('li_id').value.trim(),pw=document.getElementById('li_pw').value.trim();
-    if(!id||!pw){toast('Enter your email/mobile and password');return;}
-    authModal.classList.remove('on');toast('Logged in (demo) — welcome back!');
+  // ---- real auth against the backend ----
+  const API_BASE='';   // same-origin /api (proxied to your backend)
+  const PORTAL={learner:'/learner',educator:'/educator',institution:'/institution',admin:'/admin'};
+  function saveSession(token,user){try{localStorage.setItem('nal_token',token);localStorage.setItem('nal_user',JSON.stringify(user||{}));if(user&&user.role==='admin')sessionStorage.setItem('nal_admin_token',token);}catch(e){}}
+
+  document.getElementById('loginSubmit').addEventListener('click',async()=>{
+    const id=document.getElementById('li_id').value.trim(),pw=document.getElementById('li_pw').value,err=document.getElementById('loginErr');
+    err.classList.remove('show');
+    if(!id||!pw){err.textContent='Enter your email/mobile and password.';err.classList.add('show');return;}
+    try{
+      const body=id.includes('@')?{email:id,password:pw}:{mobile:id,password:pw};
+      const r=await fetch(API_BASE+'/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      const data=await r.json();
+      if(!r.ok){err.textContent=data.error||'Login failed — check your details.';err.classList.add('show');return;}
+      saveSession(data.token,data.user);
+      toast('Welcome back!');
+      location.href=PORTAL[data.user&&data.user.role]||'/learner';
+    }catch(e){err.textContent='Cannot reach the server. Please try again.';err.classList.add('show');}
   });
-  document.getElementById('signupSubmit').addEventListener('click',()=>{
-    const name=document.getElementById('su_name').value.trim(),mob=document.getElementById('su_mob').value.trim();
-    if(!name||!mob){toast('Name and mobile number are required');return;}
-    authModal.classList.remove('on');toast('Account created (demo) — welcome to New Age Learning!');
+
+  document.getElementById('signupSubmit').addEventListener('click',async()=>{
+    const name=document.getElementById('su_name').value.trim();
+    const mobile=document.getElementById('su_mob').value.trim();
+    const email=document.getElementById('su_email').value.trim();
+    const city=document.getElementById('su_city').value.trim();
+    const password=document.getElementById('su_pw').value;
+    const err=document.getElementById('signupErr');
+    err.classList.remove('show');
+    if(!name||!mobile||!password){err.textContent='Name, mobile and password are required.';err.classList.add('show');return;}
+    const miss=[...document.querySelectorAll('#su_dynamic [data-fk]')].find(el=>el.dataset.req==='1'&&!el.value);
+    if(miss){err.textContent=(miss.dataset.label||'A required field')+' is required.';err.classList.add('show');return;}
+    const cf={};document.querySelectorAll('#su_dynamic [data-fk]').forEach(el=>{if(el.value)cf[el.dataset.fk]=el.value;});
+    try{
+      const body={role,name,mobile,email:email||null,city:city||null,password,custom_fields:cf};
+      const r=await fetch(API_BASE+'/api/auth/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+      const data=await r.json();
+      if(!r.ok){err.textContent=data.error||'Could not create the account.';err.classList.add('show');return;}
+      saveSession(data.token,data.user);
+      toast('Welcome to New Age Learning!');
+      location.href=PORTAL[role]||'/learner';
+    }catch(e){err.textContent='Cannot reach the server. Please try again.';err.classList.add('show');}
   });
 
   // toast
@@ -590,6 +622,48 @@
     contactModal.classList.remove('on');toast("Thanks! We'll get back to you soon.");
     ['ct_name','ct_mobile','ct_email','ct_msg'].forEach(id=>document.getElementById(id).value='');
   });
+
+  /* ===== live content from the admin console ===== */
+  const SIGNUP_FIELDS=[];
+  const CORE_KEYS=['name','mobile','email','city','password'];
+  window.renderSignupExtras=function(r){
+    const box=document.getElementById('su_dynamic');if(!box)return;box.innerHTML='';
+    SIGNUP_FIELDS.filter(f=>!CORE_KEYS.includes(f.field_key)&&(!f.applies_to||f.applies_to===r)).forEach(f=>{
+      const star=f.is_mandatory?' <span class="req">*</span>':'';
+      let input;
+      const reqAttr=`data-fk="${f.field_key}" data-req="${f.is_mandatory?1:0}" data-label="${f.label}"`;
+      if(f.type==='dropdown'){
+        const opts=(f.options||[]).map(o=>`<option>${o}</option>`).join('');
+        input=`<select ${reqAttr}><option value="">Select…</option>${opts}</select>`;
+      }else{
+        const t=f.type==='number'?'number':f.type==='date'?'date':f.type==='email'?'email':'text';
+        input=`<input type="${t}" ${reqAttr} placeholder="${f.label}">`;
+      }
+      box.insertAdjacentHTML('beforeend',`<div class="fld"><label>${f.label}${star}</label>${input}</div>`);
+    });
+  };
+  function renderLibrary(items){
+    const grid=document.getElementById('libGrid');if(!grid||!items||!items.length)return;
+    const covers=['c1','c2','c3'],icons={pdf:'📖 Read',audio:'🎧 Listen',video:'▶ Watch'},glyph=['📘','💡','🚀','📗','🎯','📙'];
+    grid.innerHTML=items.map((it,i)=>{
+      const fmts=(it.formats||[]).filter(Boolean).map(f=>`<span class="fmt">${icons[f]||f}</span>`).join('');
+      return `<article class="book"><div class="cover ${covers[i%3]}">${glyph[i%glyph.length]}</div>`+
+        `<div class="body"><h4>${it.title}</h4><div class="meta">${it.age_group||''}</div><div class="formats">${fmts}</div></div>`+
+        `<div class="foot"><div class="book-actions"><button class="heart" aria-label="Save to wishlist">♡</button><button class="buy" data-read>Read now</button></div></div></article>`;
+    }).join('');
+    grid.addEventListener('click',e=>{
+      if(e.target.matches('[data-read]'))location.href='/learner';
+      if(e.target.classList&&e.target.classList.contains('heart')){let t=null;try{t=localStorage.getItem('nal_token');}catch(_){}location.href=t?'/learner':'#';if(!t&&typeof openAuth==='function')openAuth('signup');}
+    },{once:true});
+  }
+  (async function loadPublicData(){
+    try{const a=await(await fetch('/api/appearance')).json();
+      const map={'home.hero.headline':'heroHeadline','home.hero.subtext':'heroSub','home.about.headline':'aboutHeadline'};
+      (a||[]).forEach(b=>{const id=map[b.block_key];if(id&&b.text_value){const el=document.getElementById(id);if(el)el.textContent=b.text_value;}});
+    }catch(e){}
+    try{const items=await(await fetch('/api/content')).json();if(Array.isArray(items))renderLibrary(items);}catch(e){}
+    try{const f=await(await fetch('/api/signup-fields')).json();if(Array.isArray(f)){f.forEach(x=>SIGNUP_FIELDS.push(x));renderSignupExtras(role);}}catch(e){}
+  })();
 </script>
 </body>
 </html>
