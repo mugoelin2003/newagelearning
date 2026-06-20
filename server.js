@@ -17,6 +17,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const { Pool } = require('pg');
+const storage = require('./storage');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -210,18 +211,43 @@ app.delete('/api/admin/content/:id', auth(), requireAdmin, async (req, res) => {
   res.json({ ok: true });
 });
 
-// upload one format (pdf/audio/video). In production stream req.file.buffer to S3/GCS.
+// upload one format (pdf/audio/video). Stores the bytes in object storage when configured.
 app.post('/api/admin/content/:id/files', auth(), requireAdmin, upload.single('file'), async (req, res) => {
   const { kind } = req.body;
   if (!['pdf','audio','video'].includes(kind)) return res.status(400).json({ error: 'bad kind' });
-  // TODO: const file_url = await uploadToStorage(req.file);
-  const file_url = `https://cdn.newagelearning.in/${req.params.id}/${kind}`;
+  let file_url;
+  if (storage.enabled() && req.file) {
+    const ext = kind === 'pdf' ? 'pdf' : kind === 'audio' ? 'mp3' : 'mp4';
+    const key = `content/${req.params.id}/${kind}-${Date.now()}.${ext}`;
+    await storage.put(key, req.file.buffer, req.file.mimetype);
+    file_url = storage.publicUrl(key) || key;   // public URL if available, else the storage key
+  } else {
+    file_url = `https://cdn.newagelearning.in/${req.params.id}/${kind}`; // placeholder until storage is set up
+  }
   const { rows } = await q(
     `INSERT INTO content_files(content_id,kind,file_url,file_size_bytes)
      VALUES ($1,$2,$3,$4)
-     ON CONFLICT (content_id,kind) DO UPDATE SET file_url=EXCLUDED.file_url RETURNING *`,
+     ON CONFLICT (content_id,kind) DO UPDATE SET file_url=EXCLUDED.file_url,
+       file_size_bytes=EXCLUDED.file_size_bytes RETURNING *`,
     [req.params.id, kind, file_url, req.file?.size || null]);
   res.status(201).json(rows[0]);
+});
+
+// serve a content file with access control; redirects to a signed/public URL
+app.get('/api/content/:id/file/:kind', auth(false), async (req, res) => {
+  const { id, kind } = req.params;
+  const { rows } = await q(
+    `SELECT f.file_url, c.access_level, c.status
+     FROM content_files f JOIN content_items c ON c.id = f.content_id
+     WHERE f.content_id=$1 AND f.kind=$2`, [id, kind]);
+  const row = rows[0];
+  if (!row || row.status !== 'live') return res.status(404).json({ error: 'not found' });
+  // free is open to all; trial/paid require a logged-in user (full entitlement check is a TODO)
+  if (row.access_level !== 'free' && !req.user) return res.status(401).json({ error: 'login required' });
+  if (req.user) logEvent(req.user.id, 'open_file', id, { kind });
+  if (/^https?:\/\//.test(row.file_url)) return res.redirect(row.file_url);          // stored public URL
+  try { return res.redirect(await storage.signedGetUrl(row.file_url)); }              // stored key → sign it
+  catch (e) { return res.status(500).json({ error: 'file unavailable' }); }
 });
 
 // =====================================================================
@@ -295,25 +321,32 @@ app.get('/api/blogs/:slug', async (req, res) => {
 //  SIGNUP FIELDS
 // =====================================================================
 app.get('/api/signup-fields', async (_req, res) => {
-  const { rows } = await q(`SELECT field_key,label,type,options,is_mandatory
+  const { rows } = await q(`SELECT field_key,label,type,options,is_mandatory,applies_to
                             FROM signup_fields WHERE is_enabled ORDER BY sort_order`);
   res.json(rows);
 });
 
+// admin sees ALL fields (incl. disabled and system) for management
+app.get('/api/admin/signup-fields', auth(), requireAdmin, async (_req, res) => {
+  const { rows } = await q(`SELECT id,field_key,label,type,options,is_enabled,is_mandatory,
+                            is_system,applies_to,sort_order FROM signup_fields ORDER BY sort_order`);
+  res.json(rows);
+});
+
 app.post('/api/admin/signup-fields', auth(), requireAdmin, async (req, res) => {
-  const { label, type = 'text', options = [], is_enabled = true, is_mandatory = false } = req.body;
+  const { label, type = 'text', options = [], is_enabled = true, is_mandatory = false, applies_to = null } = req.body;
   if (!label) return res.status(400).json({ error: 'label required' });
   const field_key = label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
   const { rows } = await q(
-    `INSERT INTO signup_fields(field_key,label,type,options,is_enabled,is_mandatory,sort_order)
-     VALUES ($1,$2,$3,$4,$5,$6,(SELECT COALESCE(MAX(sort_order),0)+1 FROM signup_fields))
+    `INSERT INTO signup_fields(field_key,label,type,options,is_enabled,is_mandatory,applies_to,sort_order)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,(SELECT COALESCE(MAX(sort_order),0)+1 FROM signup_fields))
      RETURNING *`,
-    [field_key, label, type, JSON.stringify(options), is_enabled, is_mandatory]);
+    [field_key, label, type, JSON.stringify(options), is_enabled, is_mandatory, applies_to]);
   res.status(201).json(rows[0]);
 });
 
 app.patch('/api/admin/signup-fields/:id', auth(), requireAdmin, async (req, res) => {
-  const allowed = ['label','type','options','is_enabled','is_mandatory'];
+  const allowed = ['label','type','options','is_enabled','is_mandatory','applies_to'];
   const sets = [], vals = [];
   allowed.forEach(k => { if (k in req.body) {
     vals.push(k === 'options' ? JSON.stringify(req.body[k]) : req.body[k]);
@@ -340,8 +373,14 @@ app.get('/api/branding', async (_req, res) => {
   res.json(rows);
 });
 app.put('/api/admin/branding/:placement', auth(), requireAdmin, upload.single('file'), async (req, res) => {
-  // TODO: const image_url = await uploadToStorage(req.file)
-  const image_url = req.body.image_url || `https://cdn.newagelearning.in/logos/${req.params.placement}`;
+  let image_url;
+  if (storage.enabled() && req.file) {
+    const key = `branding/${req.params.placement}-${Date.now()}`;
+    await storage.put(key, req.file.buffer, req.file.mimetype);
+    image_url = storage.publicUrl(key) || key;
+  } else {
+    image_url = req.body.image_url || `https://cdn.newagelearning.in/logos/${req.params.placement}`;
+  }
   const { rows } = await q(
     `INSERT INTO branding_assets(placement,image_url,updated_by) VALUES ($1,$2,$3)
      ON CONFLICT (placement) DO UPDATE SET image_url=EXCLUDED.image_url,updated_at=now() RETURNING *`,
